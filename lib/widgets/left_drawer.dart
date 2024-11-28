@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sajiwara/screens/menu.dart';
+import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 
 // TODO: Import semua inian kalian aja dah
 
@@ -97,9 +98,13 @@ class LeftDrawer extends StatelessWidget {
             context,
             icon: Icons.restaurant,
             text: 'Add Wishlist Resto',
-            // TODO: masukkan routing
-            // NOTE INI BIAR JALAN!!
-            onTap: () => _showSnackBar(context, 'Menu Wishlist Resto ditekan'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WishlistResto(),
+                  ));
+            },
           ),
           _buildDrawerItem(
             context,
