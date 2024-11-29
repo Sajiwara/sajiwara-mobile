@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
+import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart'; // Sesuaikan dengan path
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -135,10 +136,20 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
+          // TODO: ADD ROUTING JUGA!!!S
+          if (item.name == "Add Wishlist Resto") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WishlistResto(), // Pastikan ini diimport
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                  content: Text("Kamu telah menekan tombol ${item.name}!")));
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(8),
