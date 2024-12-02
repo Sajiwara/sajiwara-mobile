@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:sajiwara-mobile/screens/menu.dart';
-import 'package:sajiwara-mobile/screens/moodentry_form.dart';
-import 'package:sajiwara-mobile/screens/list_moodentry.dart';
+import 'package:sajiwara/screens/menu.dart';
+import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
+
+// TODO: Import semua inian kalian aja dah
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.blueGrey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +28,24 @@ class LeftDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
             child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Icon(
+                  Icons.fastfood_rounded,
+                  size: 48,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 10),
                 Text(
                   'Sajiwara',
                   textAlign: TextAlign.center,
@@ -26,89 +55,89 @@ class LeftDrawer extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                Padding(padding: EdgeInsets.all(8)),
+                SizedBox(height: 8),
                 Text(
                   "Eksplor Makanan dan Restoran Jogja",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
+                    color: Colors.white70,
                   ),
                 ),
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.home_outlined),
-            title: const Text('Halaman Utama'),
-            // Bagian redirection ke MyHomePage
+          _buildDrawerItem(
+            context,
+            icon: Icons.home_outlined,
+            text: 'Halaman Utama',
             onTap: () {
               Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.search,
+            text: 'Search',
+            // TODO: masukkan routing
+            // NOTE INI BIAR JALAN!!
+            onTap: () => _showSnackBar(context, 'Menu Search ditekan'),
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.explore,
+            text: 'Explore Makanan',
+            // TODO: masukkan routing
+            // NOTE INI BIAR JALAN!!
+            onTap: () => _showSnackBar(context, 'Menu Explore Makanan ditekan'),
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.restaurant,
+            text: 'Add Wishlist Resto',
+            onTap: () {
+              Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyHomePage(),
+                    builder: (context) => const WishlistResto(),
                   ));
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.add_reaction_rounded),
-            title: const Text('Search'),
-            onTap: () {
-              // Route menu ke Search
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MoodEntryPage()),
-              );
-            },
+          _buildDrawerItem(
+            context,
+            icon: Icons.fastfood,
+            text: 'Add Wishlist Food',
+            // TODO: masukkan routing
+            // NOTE INI BIAR JALAN!!
+            onTap: () => _showSnackBar(context, 'Menu Wishlist Food ditekan'),
           ),
-          ListTile(
-            leading: const Icon(Icons.mood),
-            title: const Text('Explore Makanan'),
-            // Bagian redirection ke Explore Makanan
-            onTap: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MoodEntryFormPage(),
-                  ));
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.add_reaction_rounded),
-            title: const Text('Add Wishlist Resto'),
-            onTap: () {
-              // Route menu ke Wishlist Resto
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MoodEntryPage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.add_reaction_rounded),
-            title: const Text('Add Wishlist Food'),
-            onTap: () {
-              // Route menu ke Wishlist Food
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MoodEntryPage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.add_reaction_rounded),
-            title: const Text('Review'),
-            onTap: () {
-              // Route menu ke Review
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MoodEntryPage()),
-              );
-            },
+          _buildDrawerItem(
+            context,
+            icon: Icons.reviews,
+            text: 'Review',
+            // TODO: masukkan routing
+            // NOTE INI BIAR JALAN!!
+            onTap: () => _showSnackBar(context, 'Menu Review ditekan'),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDrawerItem(
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      title: Text(text, style: TextStyle(fontSize: 16)),
+      onTap: onTap,
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
     );
   }
 }
