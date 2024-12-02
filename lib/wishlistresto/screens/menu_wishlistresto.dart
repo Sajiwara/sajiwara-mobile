@@ -93,6 +93,12 @@ class _WishlistRestoPageState extends State<WishlistResto> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WishlistRestoFormPage(),
+                        ),
+                      );
                       // Add button action
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Add button clicked')),
