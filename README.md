@@ -69,5 +69,5 @@ https://www.kaggle.com/datasets/yudhaislamisulistya/places-to-eat-in-the-jogja-r
 - Untuk mengambil data akan digunakan HTTP GET dari end-point data di web yang hasil pemanggilannya akan digunakan untuk ditampilkan pada widget yang digunakan.
 - Untuk mengirim data, akan digunakan HTTP POST yang menuju ke end-point untuk menyimpan data yang ada di database Django.
 
-## Design Web
+## Design Aplikasi
 https://www.figma.com/design/02mog4EnCG9xWXxalEh2J7/Desain-web?node-id=0-1&t=hUn5zexL79naJwXn-1
