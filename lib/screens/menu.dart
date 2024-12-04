@@ -11,6 +11,7 @@ class MyHomePage extends StatelessWidget {
     ItemHomepage("Add Wishlist Resto", Icons.favorite_border),
     ItemHomepage("Add Wishlist Food", Icons.fastfood),
     ItemHomepage("Review", Icons.rate_review),
+    ItemHomepage("Logout", Icons.logout),
   ];
 
   @override
@@ -144,6 +145,8 @@ class ItemCard extends StatelessWidget {
                 builder: (context) => WishlistResto(), // Pastikan ini diimport
               ),
             );
+          } else if (item.name == "Logout") {
+            // TODO: NANTI YAAA
           } else {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
