@@ -14,13 +14,53 @@ class WishlistRestoEntryPage extends StatefulWidget {
 }
 
 class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
-  Future<List<WishlistResto>> fetchWishlistResto(CookieRequest request) async {
-    // URL API untuk mendapatkan data wishlist
-    final response = await request.get(
-        'http://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/json/');
+  // Future<List<WishlistResto>> fetchWishlistResto(CookieRequest request) async {
+  //   // URL API untuk mendapatkan data wishlist
+  //   final response = await request.get(
+  //       'http://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/json/');
 
-    // Decode response JSON
-    return wishlistRestoFromJson(jsonEncode(response));
+  //   // Decode response JSON
+  //   return wishlistRestoFromJson(jsonEncode(response));
+  // }
+  Future<List<WishlistResto>> fetchWishlistResto(CookieRequest request) async {
+    try {
+      // Print full response for debugging
+      final response = await request.get(
+          'http://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/json/');
+
+      // Debug: Print the raw response
+      print('Raw Response: $response');
+      print('Response Type: ${response.runtimeType}');
+
+      // Additional error handling
+      if (response is String && response.contains('<!doctype') ||
+          response.contains('<html>')) {
+        print(
+            'Received HTML instead of JSON. Possible authentication or server error.');
+        return [];
+      }
+
+      // If response is a List, proceed with parsing
+      if (response is List) {
+        return response.map((x) => WishlistResto.fromJson(x)).toList();
+      }
+
+      // If response is a Map (sometimes happens with some HTTP clients)
+      if (response is Map) {
+        // Check if there's a 'data' or similar key containing the list
+        if (response.containsKey('data')) {
+          return (response['data'] as List)
+              .map((x) => WishlistResto.fromJson(x))
+              .toList();
+        }
+      }
+
+      print('Unexpected response format');
+      return [];
+    } catch (e) {
+      print('Error fetching wishlist: $e');
+      return [];
+    }
   }
 
   @override
