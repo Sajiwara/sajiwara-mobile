@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/form_wishlistresto.dart';
+import 'package:sajiwara/wishlistresto/screens/list_wishlist.dart';
 
 class WishlistResto extends StatefulWidget {
   const WishlistResto({super.key});
@@ -129,7 +130,12 @@ class _WishlistRestoPageState extends State<WishlistResto> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: () {
-                      // ToDO: ROUTING KE VIEW LIST ALL
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WishlistRestoEntryPage(),
+                        ),
+                      );
                       // View button action
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('View button clicked')),
