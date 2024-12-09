@@ -113,10 +113,6 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
                       ),
                       const SizedBox(height: 10),
                       const SizedBox(height: 5),
-                      Text(
-                        "${wishlist.fields.wantedResto ? "Yes" : "No"}",
-                        style: const TextStyle(fontSize: 14.0),
-                      ),
                       const SizedBox(height: 5),
                       Text(
                         "Visited: ${wishlist.fields.visited ? "Telah dikunjungi" : "Belum dikunjungi"}",

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
+import 'package:http/http.dart' as http;
 
 class WishlistRestoFormPage extends StatefulWidget {
   const WishlistRestoFormPage({super.key});
@@ -17,6 +18,34 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
   String? _selectedRestaurant;
   List<String> _restaurants = [];
   bool _isLoading = false;
+
+  Future<void> addToWishlist(String restaurant) async {
+    final url = Uri.parse(
+        'http://127.0.0.1:8000/wishlistresto/add-to-wishlist-flutter/');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'restaurant_wanted': restaurant,
+          'wanted_resto': true,
+          'visited': false,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        print('Success: ${jsonDecode(response.body)}');
+      } else {
+        print('Error: ${jsonDecode(response.body)}');
+      }
+    } catch (e) {
+      print('Error sending data: $e');
+    }
+  }
 
   @override
   void initState() {
@@ -132,16 +161,35 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  // print("WOI");
+                  // print(_selectedRestaurant);
+                  // addToWishlist(_selectedRestaurant!);
                   if (_formKey.currentState!.validate()) {
-                    // TODO: Implement add to wishlist functionality
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            'Restoran $_selectedRestaurant ditambahkan ke wishlist'),
-                        backgroundColor: Colors.deepOrange[400],
-                      ),
-                    );
+                    print("anjay");
+                    print(_selectedRestaurant);
+                    if (_selectedRestaurant != null) {
+                      // Kirim data ke backend Django
+                      print(_selectedRestaurant);
+                      await addToWishlist(_selectedRestaurant!);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Restoran $_selectedRestaurant ditambahkan ke wishlist'),
+                          backgroundColor: Colors.deepOrange[400],
+                        ),
+                      );
+                    } else {
+                      // Tampilkan pesan kesalahan jika tidak ada restoran yang dipilih
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                              'Harap pilih restoran sebelum menambahkan!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
