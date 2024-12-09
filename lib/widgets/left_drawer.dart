@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sajiwara/screens/menu.dart';
+import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 
 class LeftDrawer extends StatelessWidget {
@@ -66,8 +67,12 @@ class LeftDrawer extends StatelessWidget {
                     context: context,
                     icon: Icons.explore_outlined,
                     text: 'Jelajahi Makanan',
-                    onTap: () =>
-                        _showStyledSnackBar(context, 'Menu Jelajahi Makanan'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MakananList(),
+                      ),
+                    ),
                   ),
                   _buildDrawerItem(
                     context: context,
