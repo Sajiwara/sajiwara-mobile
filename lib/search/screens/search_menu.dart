@@ -1,163 +1,134 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SearchPage(),
-    );
-  }
-}
-
-class SearchPage extends StatelessWidget {
-  final List<String> categories = ['All', 'Indonesian', 'Western', 'Chinese'];
-
-  SearchPage({super.key});
+class SearchFoodPage extends StatelessWidget {
+  const SearchFoodPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Menu Icon
-              IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {},
+              // Top Icon
+              Column(
+                children: [
+                  Image.asset(
+                    "assets/icon.png",
+                    width: 27,
+                    height: 15,
+                  ),
+                ],
               ),
-              
-              const SizedBox(height: 20),
               
               // Search Text
               const Text(
-                'Search',
+                "Search",
                 style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.deepOrange,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               
-              const SizedBox(height: 10),
-              
-              // Find Your Favorite Food Text
+              // Find Food Text
               const Text(
-                'Find Your\nFavorite Food!',
+                "Find Your\nFavorite Food!",
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 35.83,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              
+              // Indonesian Text
+              const Text(
+                "Mau Makan Apa\nHari ini?",
+                style: TextStyle(
+                  fontSize: 35.83,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              
+              // Search Bar
+              Stack(
+                children: [
+                  Container(
+                    width: 343.84,
+                    height: 41,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: const Color(0xffc9c9c9),
+                    ),
+                  ),
+                  Positioned(
+                    left: 16,
+                    top: 12,
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          "assets/Icon.png",
+                          width: 13.23,
+                          height: 13.23,
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          "Search",
+                          style: TextStyle(
+                            fontSize: 17.65,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Category List
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildCategoryItem("All"),
+                    _buildCategoryItem("Chinese"),
+                    _buildCategoryItem("Western"),
+                    _buildCategoryItem("Indonesian"),
+                  ],
                 ),
               ),
               
               const SizedBox(height: 20),
               
-              // Search Bar
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Restaurant',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: const Icon(Icons.tune),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(15),
+              // No Search Text
+              const Center(
+                child: Text(
+                  "Belum ada pencarian",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               
-              const SizedBox(height: 20),
-              
-              // Categories
-              SizedBox(
-                height: 40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Chip(
-                        label: Text(categories[index]),
-                        backgroundColor: index == 0 ? Colors.deepOrange : Colors.grey[300],
-                        labelStyle: TextStyle(
-                          color: index == 0 ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              
-              const SizedBox(height: 20),
-              
-              // Nearest Section
-              const Text(
-                'Nearest',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: RestoCard(
-                        name: 'Resto Cak Imin',
-                        rating: 5.0,
-                        distance: 10,
-                        price: 10000,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              
-              const SizedBox(height: 20),
-              
-              // Most Rated Section
-              const Text(
-                'Most Rated',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: RestoCard(
-                        name: 'Resto Cak Imin',
-                        rating: 5.0,
-                        distance: 10,
-                        price: 10000,
-                      ),
-                    );
-                  },
-                ),
+              // Bottom Icons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/tone.png",
+                    width: 16,
+                    height: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Image.asset(
+                    "assets/shape.png",
+                    width: 16,
+                    height: 18,
+                  ),
+                ],
               ),
             ],
           ),
@@ -165,66 +136,23 @@ class SearchPage extends StatelessWidget {
       ),
     );
   }
-}
 
-class RestoCard extends StatelessWidget {
-  final String name;
-  final double rating;
-  final int distance;
-  final int price;
-
-  const RestoCard({
-    super.key,
-    required this.name,
-    required this.rating,
-    required this.distance,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image placeholder
-          Container(
-            height: 100,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-            ),
+  Widget _buildCategoryItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.star, color: Colors.yellow, size: 16),
-                    Text('$rating'),
-                    const SizedBox(width: 5),
-                    Icon(Icons.location_on, color: Colors.grey[600], size: 16),
-                    Text('$distance km'),
-                    const SizedBox(width: 5),
-                    Icon(Icons.monetization_on, color: Colors.grey[600], size: 16),
-                    Text('${price}k'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

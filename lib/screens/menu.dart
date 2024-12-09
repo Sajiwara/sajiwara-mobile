@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:sajiwara/screens/login.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
-
+import 'package:sajiwara/search/screens/search_menu.dart';
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
@@ -131,26 +131,13 @@ class ItemCard extends StatelessWidget {
         break;
 
       case "Search":
-      Navigator.push(
+       Navigator.push(
           context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                WishlistResto(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              var begin = Offset(1.0, 0.0);
-              var end = Offset.zero;
-              var curve = Curves.easeInOutQuart;
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
+          MaterialPageRoute(
+            builder: (context) =>  SearchFoodPage(),
           ),
         );
+      
         break;
 
       default: // TODO: add routing kalian
