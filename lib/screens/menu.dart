@@ -129,6 +129,30 @@ class ItemCard extends StatelessWidget {
           (Route<dynamic> route) => false,
         );
         break;
+
+      case "Search":
+      Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                WishlistResto(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = Offset(1.0, 0.0);
+              var end = Offset.zero;
+              var curve = Curves.easeInOutQuart;
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+        break;
+
       default: // TODO: add routing kalian
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
