@@ -1,159 +1,141 @@
 import 'package:flutter/material.dart';
+import 'package:sajiwara/widgets/left_drawer.dart';
 
-class SearchFoodPage extends StatelessWidget {
-  const SearchFoodPage({super.key});
+class SearchResto extends StatefulWidget {
+  const SearchResto({super.key});
+
+  @override
+  State<SearchResto> createState() => _SearchRestoPageState();
+}
+
+class _SearchRestoPageState extends State<SearchResto> {
+  int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top Icon
-              Column(
-                children: [
-                  Image.asset(
-                    "assets/icon.png",
-                    width: 27,
-                    height: 15,
-                  ),
-                ],
+      key: _scaffoldKey,
+      drawer: const LeftDrawer(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.menu, color: Colors.deepOrange),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+        title: const Text(
+          'Search',
+          style: TextStyle(color: Colors.deepOrange),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Find Your\nFavorite Food!',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepOrange,
               ),
-              
-              // Search Text
-              const Text(
-                "Search",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
+            ),
+            const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  suffixIcon: Icon(Icons.tune),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 ),
               ),
-              
-              // Find Food Text
-              const Text(
-                "Find Your\nFavorite Food!",
-                style: TextStyle(
-                  fontSize: 35.83,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              
-              // Indonesian Text
-              const Text(
-                "Mau Makan Apa\nHari ini?",
-                style: TextStyle(
-                  fontSize: 35.83,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              
-              // Search Bar
-              Stack(
-                children: [
-                  Container(
-                    width: 343.84,
-                    height: 41,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: const Color(0xffc9c9c9),
-                    ),
-                  ),
-                  Positioned(
-                    left: 16,
-                    top: 12,
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          "assets/Icon.png",
-                          width: 13.23,
-                          height: 13.23,
-                        ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          "Search",
-                          style: TextStyle(
-                            fontSize: 17.65,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 20),
-              
-              // Category List
-              SingleChildScrollView(
+            ),
+            const SizedBox(height: 20),
+            Container(
+              height: 40,
+              child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
-                    _buildCategoryItem("All"),
-                    _buildCategoryItem("Chinese"),
-                    _buildCategoryItem("Western"),
-                    _buildCategoryItem("Indonesian"),
+                  children: <Widget>[
+                    _categoryButton('All', 0),
+                    const SizedBox(width: 8),
+                    _categoryButton('Indonesian', 1),
+                    const SizedBox(width: 8),
+                    _categoryButton('Western', 2),
+                    const SizedBox(width: 8),
+                    _categoryButton('Chinese', 3),
+                    const SizedBox(width: 8),
+                    _categoryButton('Middle Eastern', 4),
+                    const SizedBox(width: 8),
+                    _categoryButton('Japanese', 5),
                   ],
                 ),
               ),
-              
-              const SizedBox(height: 20),
-              
-              // No Search Text
-              const Center(
-                child: Text(
-                  "Belum ada pencarian",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0),
+              child: Text(
+                'Belum ada pencarian',
+                style: TextStyle(
+                  color: Colors.deepOrange,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              
-              // Bottom Icons
-              Row(
+            ),
+            Expanded(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    "assets/tone.png",
-                    width: 16,
-                    height: 18,
-                  ),
-                  const SizedBox(width: 8),
-                  Image.asset(
-                    "assets/shape.png",
-                    width: 16,
-                    height: 18,
+                  SizedBox(
+                    width: double.infinity, // Make the container full width
+                    child: Text(
+                      'Mau Makan Apa\nHari ini?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.deepOrange,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildCategoryItem(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 12.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
+  Widget _categoryButton(String title, int index) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        foregroundColor: _selectedIndex == index ? Colors.white : Colors.black87,
+        backgroundColor: _selectedIndex == index ? Colors.deepOrange : Colors.grey[200],
+        elevation: 0,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
+      child: Text(title),
     );
   }
 }
