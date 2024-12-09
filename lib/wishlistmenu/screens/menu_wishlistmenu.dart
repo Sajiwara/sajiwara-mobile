@@ -16,7 +16,7 @@ class _WishlistMenuPageState extends State<WishlistMenu> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Wishlist Restoran',
+          'Wishlist Menu',
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         centerTitle: true,
@@ -56,7 +56,7 @@ class _WishlistMenuPageState extends State<WishlistMenu> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Temukan restoran favoritmu dan tambahkan ke wishlist untuk pengalaman kuliner yang luar biasa!',
+                            'Temukan makanan favoritmu dan tambahkan ke wishlist untuk pengalaman kuliner yang luar biasa!',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],

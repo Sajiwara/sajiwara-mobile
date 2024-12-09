@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:sajiwara/screens/login.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
+import 'package:sajiwara/review/screens/review.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -129,6 +130,15 @@ class ItemCard extends StatelessWidget {
           (Route<dynamic> route) => false,
         );
         break;
+      case "Review":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ReviewPage(),
+          ),
+        );
+        break;
+
       default: // TODO: add routing kalian
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
