@@ -14,8 +14,9 @@ class WishlistRestoFormPage extends StatefulWidget {
 
 class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
   final _formKey = GlobalKey<FormState>();
-  String? _selectedRestaurant; // Pilihan restoran yang dipilih
-  List<String> _restaurants = []; // Daftar nama restoran
+  String? _selectedRestaurant;
+  List<String> _restaurants = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -24,18 +25,22 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
   }
 
   Future<void> _fetchRestaurantData() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
-      // Membaca file JSON dari assets
       final String response = await rootBundle.loadString('restaurants.json');
       final List<dynamic> data = json.decode(response);
 
-      // Mengambil nama restoran dari JSON
       setState(() {
         _restaurants =
             data.map((entry) => entry['Nama Restoran'] as String).toList();
+        _isLoading = false;
       });
     } catch (e) {
-      // Menangani error ketika membaca file JSON
+      setState(() {
+        _isLoading = false;
+      });
       print('Error loading restaurant data: $e');
     }
   }
@@ -44,105 +49,114 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Center(
-          child: Text('Tambah Restoran ke Wishlist'),
+        elevation: 0,
+        title: const Text(
+          'Tambah Restoran ke Wishlist',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        centerTitle: true,
+        backgroundColor: Colors.deepOrange[400],
         foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField<String>(
-                  value: _selectedRestaurant,
-                  items: _restaurants.map((restaurant) {
-                    return DropdownMenuItem<String>(
-                      value: restaurant,
-                      child: Text(restaurant),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _selectedRestaurant = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Pilih Restoran",
-                    labelText: "Restoran",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Pilih Restoran Favoritmu',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepOrange[700],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : DropdownButtonFormField<String>(
+                              value: _selectedRestaurant,
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                hintText: "Pilih Restoran",
+                                labelText: "Restoran",
+                                prefixIcon: Icon(Icons.restaurant_menu,
+                                    color: Colors.deepOrange[400]),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              items: _restaurants.map((restaurant) {
+                                return DropdownMenuItem<String>(
+                                  value: restaurant,
+                                  child: Text(
+                                    restaurant,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedRestaurant = value;
+                                });
+                              },
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Restoran tidak boleh kosong!";
+                                }
+                                return null;
+                              },
+                            ),
+                    ],
                   ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Restoran tidak boleh kosong!";
-                    }
-                    return null;
-                  },
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.primary),
-                    ),
-                    // onPressed: () {
-                    //   if (_formKey.currentState!.validate()) {
-                    //     // Aksi ketika tombol tambah ditekan
-                    //     print('Restoran dipilih: $_selectedRestaurant');
-                    //   }
-                    // },
-
-                    onPressed: () async {
-                      // if (_formKey.currentState!.validate()) {
-                      //   // Kirim ke Django dan tunggu respons
-                      //   // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                      //   final response = await request.postJson(
-                      //     "http://[URL_APP_KAMU]/create-flutter/",
-                      //     jsonEncode(<String, String>{
-                      //       'mood': _mood,
-                      //       'mood_intensity': _moodIntensity.toString(),
-                      //       'feelings': _feelings,
-                      //       // TODO: Sesuaikan field data sesuai dengan aplikasimu
-                      //     }),
-                      //   );
-                      //   if (context.mounted) {
-                      //     if (response['status'] == 'success') {
-                      //       ScaffoldMessenger.of(context)
-                      //           .showSnackBar(const SnackBar(
-                      //         content: Text("Mood baru berhasil disimpan!"),
-                      //       ));
-                      //       Navigator.pushReplacement(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => MyHomePage()),
-                      //       );
-                      //     } else {
-                      //       ScaffoldMessenger.of(context)
-                      //           .showSnackBar(const SnackBar(
-                      //         content: Text(
-                      //             "Terdapat kesalahan, silakan coba lagi."),
-                      //       ));
-                      //     }
-                      //   }
-                      // }
-                    },
-
-                    child: const Text(
-                      "Tambah",
-                      style: TextStyle(color: Colors.white),
-                    ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // TODO: Implement add to wishlist functionality
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            'Restoran $_selectedRestaurant ditambahkan ke wishlist'),
+                        backgroundColor: Colors.deepOrange[400],
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepOrange[100],
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 4,
+                ),
+                child: const Text(
+                  'Tambah ke Wishlist',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
