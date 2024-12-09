@@ -14,50 +14,38 @@ class WishlistRestoEntryPage extends StatefulWidget {
 }
 
 class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
-  // Future<List<WishlistResto>> fetchWishlistResto(CookieRequest request) async {
-  //   // URL API untuk mendapatkan data wishlist
-  //   final response = await request.get(
-  //       'http://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/json/');
-
-  //   // Decode response JSON
-  //   return wishlistRestoFromJson(jsonEncode(response));
-  // }
   Future<List<WishlistResto>> fetchWishlistResto(CookieRequest request) async {
     try {
-      // Print full response for debugging
-      final response = await request.get(
-          'http://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/json/');
+      // Mendapatkan respons dari server
+      final response =
+          await request.get('http://127.0.0.1:8000/wishlist/json/');
 
-      // Debug: Print the raw response
+      // Debug: Cetak respons mentah
       print('Raw Response: $response');
-      print('Response Type: ${response.runtimeType}');
 
-      // Additional error handling
-      if (response is String && response.contains('<!doctype') ||
-          response.contains('<html>')) {
+      // Penanganan jika respons berupa HTML (kemungkinan error)
+      if (response is String && response.contains('<html>')) {
         print(
-            'Received HTML instead of JSON. Possible authentication or server error.');
-        return [];
+            'Error: Server returned HTML instead of JSON. Possible authentication or server error.');
+        throw FormatException('Invalid response format: HTML received.');
       }
 
-      // If response is a List, proceed with parsing
+      // Pastikan respons berupa List atau Map
       if (response is List) {
+        // Parsing dari List
         return response.map((x) => WishlistResto.fromJson(x)).toList();
+      } else if (response is Map && response.containsKey('data')) {
+        // Parsing dari Map jika terdapat key 'data'
+        return (response['data'] as List)
+            .map((x) => WishlistResto.fromJson(x))
+            .toList();
       }
 
-      // If response is a Map (sometimes happens with some HTTP clients)
-      if (response is Map) {
-        // Check if there's a 'data' or similar key containing the list
-        if (response.containsKey('data')) {
-          return (response['data'] as List)
-              .map((x) => WishlistResto.fromJson(x))
-              .toList();
-        }
-      }
-
+      // Jika format respons tidak sesuai
       print('Unexpected response format');
-      return [];
+      throw FormatException('Unexpected response format.');
     } catch (e) {
+      // Tangani error lainnya
       print('Error fetching wishlist: $e');
       return [];
     }
@@ -76,6 +64,14 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
         builder: (context, AsyncSnapshot<List<WishlistResto>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(
+                    fontSize: 16, color: Color.fromARGB(255, 255, 0, 0)),
+              ),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
               child: Text(
@@ -116,13 +112,9 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(
-                        "User ID: ${wishlist.fields.user}",
-                        style: const TextStyle(fontSize: 14.0),
-                      ),
                       const SizedBox(height: 5),
                       Text(
-                        "Wanted Resto: ${wishlist.fields.wantedResto ? "Yes" : "No"}",
+                        "${wishlist.fields.wantedResto ? "Yes" : "No"}",
                         style: const TextStyle(fontSize: 14.0),
                       ),
                       const SizedBox(height: 5),
