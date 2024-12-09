@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
-import 'package:sajiwara/wishlistresto/screens/form_wishlistresto.dart';
+import 'package:sajiwara/wishlistmenu/screens/form_wishlistmenu.dart';
+import 'package:sajiwara/wishlistmenu/screens/list_wishlistmenu.dart';
 
-class WishlistResto extends StatefulWidget {
-  const WishlistResto({super.key});
+class WishlistMenu extends StatefulWidget {
+  const WishlistMenu({super.key});
 
   @override
-  State<WishlistResto> createState() => _WishlistRestoPageState();
+  State<WishlistMenu> createState() => _WishlistMenuPageState();
 }
 
-class _WishlistRestoPageState extends State<WishlistResto> {
+class _WishlistMenuPageState extends State<WishlistMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +94,12 @@ class _WishlistRestoPageState extends State<WishlistResto> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WishlistMenu(), ///////////////////////////////
+                        ),
+                      );
                       // Add button action
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Add button clicked')),
@@ -123,7 +130,12 @@ class _WishlistRestoPageState extends State<WishlistResto> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: () {
-                      // ToDO: ROUTING KE VIEW LIST ALL
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WishlistMenu(), ////////////////
+                        ),
+                      );
                       // View button action
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('View button clicked')),

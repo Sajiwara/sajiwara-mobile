@@ -1,113 +1,81 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sajiwara/screens/login.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
-import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart'; // Sesuaikan dengan path
+import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
   final List<ItemHomepage> items = [
-    ItemHomepage("Search", Icons.search),
-    ItemHomepage("Explore Makanan", Icons.restaurant),
-    ItemHomepage("Add Wishlist Resto", Icons.favorite_border),
-    ItemHomepage("Add Wishlist Food", Icons.fastfood),
-    ItemHomepage("Review", Icons.rate_review),
+    ItemHomepage("Search", Icons.search, Colors.blue),
+    ItemHomepage("Explore Makanan", Icons.restaurant, Colors.green),
+    ItemHomepage("Add Wishlist Resto", Icons.favorite_border, Colors.red),
+    ItemHomepage("Add Wishlist Food", Icons.fastfood, Colors.orange),
+    ItemHomepage("Review", Icons.rate_review, Colors.purple),
+    ItemHomepage("Logout", Icons.logout, Colors.deepPurple),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Bagian atas dengan gambar latar
-          Stack(
-            children: [
-              // Gambar Latar
-              Container(
-                height: 250.0,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/food_background.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              // Overlay Gradient
-              Container(
-                height: 250.0,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.black.withOpacity(0.6),
-                      Colors.transparent,
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
-                ),
-              ),
-              // Teks di atas gambar
-              Positioned(
-                left: 16.0,
-                bottom: 16.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Sajiwara',
-                      style: TextStyle(
-                        fontSize: 28.0,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    const Text(
-                      'Explore the best culinary experiences in Jogja!',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
+      body: CustomScrollView(
+        slivers: [
+          // Sliver App Bar with Animated Background
+          SliverAppBar(
+            expandedHeight: 300.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                'Sajiwara',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.black54,
+                      offset: Offset(2.0, 2.0),
                     ),
                   ],
                 ),
               ),
-              // Tombol Drawer (Hamburger Menu) dengan Builder
-              Positioned(
-                top: 40.0,
-                left: 16.0,
-                child: Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    'assets/images/food_background.png',
+                    fit: BoxFit.cover,
                   ),
-                ),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
 
-          // Sisa konten aplikasi
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GridView.count(
-                primary: true,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 3,
-                // Agar grid menyesuaikan tinggi kontennya.
-                shrinkWrap: true,
-
-                // Menampilkan ItemCard untuk setiap item dalam list items.
-                children: items.map((ItemHomepage item) {
-                  return ItemCard(item);
-                }).toList(),
-              ),
+          // Grid of Menu Items
+          SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: SliverGrid.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 16.0,
+              crossAxisSpacing: 16.0,
+              children: items.map((ItemHomepage item) {
+                return ItemCard(item);
+              }).toList(),
             ),
           ),
         ],
@@ -120,8 +88,9 @@ class MyHomePage extends StatelessWidget {
 class ItemHomepage {
   final String name;
   final IconData icon;
+  final Color color;
 
-  ItemHomepage(this.name, this.icon);
+  ItemHomepage(this.name, this.icon, this.color);
 }
 
 class ItemCard extends StatelessWidget {
@@ -129,50 +98,105 @@ class ItemCard extends StatelessWidget {
 
   const ItemCard(this.item, {super.key});
 
+  void _handleItemTap(BuildContext context) {
+    switch (item.name) {
+      case "Add Wishlist Resto":
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                WishlistResto(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = Offset(1.0, 0.0);
+              var end = Offset.zero;
+              var curve = Curves.easeInOutQuart;
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+        break;
+      case "Logout":
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+          (Route<dynamic> route) => false,
+        );
+        break;
+      default: // TODO: add routing kalian
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(content: Text("You pressed ${item.name}!")),
+          );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).colorScheme.secondary,
-      borderRadius: BorderRadius.circular(12),
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: InkWell(
-        onTap: () {
-          // TODO: ADD ROUTING JUGA!!!S
-          if (item.name == "Add Wishlist Resto") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => WishlistResto(), // Pastikan ini diimport
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                  content: Text("Kamu telah menekan tombol ${item.name}!")));
-          }
-        },
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => _handleItemTap(context),
         child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              colors: [
+                item.color.withOpacity(0.7),
+                item.color,
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Icon(
+                  item.icon,
+                  color: Colors.white.withOpacity(0.7),
+                  size: 40.0,
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      item.icon,
+                      color: Colors.white,
+                      size: 50.0,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      item.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 500.ms);
   }
 }
