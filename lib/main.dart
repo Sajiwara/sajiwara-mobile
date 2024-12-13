@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           ).copyWith(secondary: Colors.deepOrange[400]),
         ),
         // home: MyHomePage(),
-        home:  MyHomePage(),
+        home:  SearchResto(),
       ),
     );
   }

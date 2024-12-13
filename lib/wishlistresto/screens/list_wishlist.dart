@@ -5,6 +5,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sajiwara/wishlistresto/models/wishlistresto_entry.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
+import 'package:sajiwara/wishlistresto/screens/form_wishlistresto.dart';
 
 class WishlistRestoEntryPage extends StatefulWidget {
   const WishlistRestoEntryPage({super.key});
@@ -16,36 +17,23 @@ class WishlistRestoEntryPage extends StatefulWidget {
 class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
   Future<List<WishlistResto>> fetchWishlistResto(CookieRequest request) async {
     try {
-      // Mendapatkan respons dari server
       final response =
           await request.get('http://127.0.0.1:8000/wishlist/json/');
 
-      // Debug: Cetak respons mentah
-      print('Raw Response: $response');
-
-      // Penanganan jika respons berupa HTML (kemungkinan error)
       if (response is String && response.contains('<html>')) {
-        print(
-            'Error: Server returned HTML instead of JSON. Possible authentication or server error.');
-        throw FormatException('Invalid response format: HTML received.');
+        throw FormatException('Invalid response format: HTML received');
       }
 
-      // Pastikan respons berupa List atau Map
       if (response is List) {
-        // Parsing dari List
-        return response.map((x) => WishlistResto.fromJson(x)).toList();
+        return response.map((item) => WishlistResto.fromJson(item)).toList();
       } else if (response is Map && response.containsKey('data')) {
-        // Parsing dari Map jika terdapat key 'data'
         return (response['data'] as List)
-            .map((x) => WishlistResto.fromJson(x))
+            .map((item) => WishlistResto.fromJson(item))
             .toList();
       }
 
-      // Jika format respons tidak sesuai
-      print('Unexpected response format');
-      throw FormatException('Unexpected response format.');
+      throw FormatException('Unexpected response format');
     } catch (e) {
-      // Tangani error lainnya
       print('Error fetching wishlist: $e');
       return [];
     }
@@ -54,81 +42,186 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text('Daftar Wishlist Restoran'),
+        title: const Text(
+          'My Restaurant Wishlist',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFFFF6B6B),
+        elevation: 0,
+        centerTitle: true,
       ),
       drawer: const LeftDrawer(),
-      body: FutureBuilder(
+      body: FutureBuilder<List<WishlistResto>>(
         future: fetchWishlistResto(request),
-        builder: (context, AsyncSnapshot<List<WishlistResto>> snapshot) {
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Error: ${snapshot.error}',
-                style: const TextStyle(
-                    fontSize: 16, color: Color.fromARGB(255, 255, 0, 0)),
-              ),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
-              child: Text(
-                'Belum ada wishlist restoran pada Sajiwara.',
-                style: TextStyle(
-                    fontSize: 20, color: Color.fromARGB(255, 216, 146, 89)),
+              child: CircularProgressIndicator(
+                color: Color(0xFFFF6B6B),
               ),
             );
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (_, index) {
-                final wishlist = snapshot.data![index];
-                return Container(
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Failed to load wishlist',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/empty_wishlist.png', // Add an empty state image
+                    height: 200,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No restaurants in your wishlist yet',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      // TODO: Navigate to add restaurant page
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF6B6B),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text('Add Restaurant'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (_, index) {
+              final wishlistItem = snapshot.data![index];
+              return Dismissible(
+                key: Key(wishlistItem.pk.toString()),
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) {
+                  // TODO: Implement delete functionality
+                },
+                child: Container(
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  padding: const EdgeInsets.all(20.0),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
                         blurRadius: 5,
                         offset: const Offset(0, 3),
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        wishlist.fields.restaurantWanted,
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16),
+                    leading: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF6B6B).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      const SizedBox(height: 10),
-                      const SizedBox(height: 5),
-                      Text(
-                        "${wishlist.fields.wantedResto ? "Yes" : "No"}",
-                        style: const TextStyle(fontSize: 14.0),
+                      child: const Icon(
+                        Icons.restaurant,
+                        color: Color(0xFFFF6B6B),
                       ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "Visited: ${wishlist.fields.visited ? "Telah dikunjungi" : "Belum dikunjungi"}",
-                        style: const TextStyle(fontSize: 14.0),
+                    ),
+                    title: Text(
+                      wishlistItem.fields.restaurantWanted,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
-                    ],
+                    ),
+                    subtitle: Text(
+                      wishlistItem.fields.visited
+                          ? "Visited"
+                          : "Not Visited Yet",
+                      style: TextStyle(
+                        color: wishlistItem.fields.visited
+                            ? Colors.green
+                            : Colors.orange,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
+                    onTap: () {
+                      // TODO: Navigate to restaurant details
+                    },
                   ),
-                );
-              },
-            );
-          }
+                ),
+              );
+            },
+          );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // TODO: Navigate to add new restaurant page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WishlistRestoFormPage(),
+            ),
+          );
+        },
+        backgroundColor: const Color(0xFFFF6B6B),
+        child: const Icon(Icons.add),
       ),
     );
   }
