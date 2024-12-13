@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sajiwara/screens/login.dart';
-import 'package:sajiwara/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
           ).copyWith(secondary: Colors.deepOrange[400]),
         ),
         // home: MyHomePage(),
-        home: LoginPage(),
+        home: const LoginPage(),
       ),
     );
   }

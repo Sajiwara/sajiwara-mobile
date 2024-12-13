@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage>
                 MyHomePage(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
-              var begin = Offset(1.0, 0.0);
+              var begin = const Offset(1.0, 0.0);
               var end = Offset.zero;
               var curve = Curves.easeInOutQuart;
               var tween =
@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage>
                         decoration: InputDecoration(
                           labelText: 'Username',
                           prefixIcon:
-                              Icon(Icons.person, color: Colors.deepOrange),
+                              const Icon(Icons.person, color: Colors.deepOrange),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage>
                         decoration: InputDecoration(
                           labelText: 'Password',
                           prefixIcon:
-                              Icon(Icons.lock, color: Colors.deepOrange),
+                              const Icon(Icons.lock, color: Colors.deepOrange),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
@@ -199,15 +199,15 @@ class _LoginPageState extends State<LoginPage>
                             ? null
                             : () => _handleLogin(context, request),
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
+                          minimumSize: const Size(double.infinity, 50),
                           backgroundColor: Colors.deepOrange.shade600,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
                         child: _isLoading
-                            ? CircularProgressIndicator(color: Colors.white)
-                            : Text('Login',
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text('Login',
                                 style: TextStyle(color: Colors.white)),
                       )
                           .animate()

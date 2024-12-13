@@ -19,7 +19,7 @@ class _SearchRestoPageState extends State<SearchResto> {
       drawer: const LeftDrawer(),
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.deepOrange),
+          icon: const Icon(Icons.menu, color: Colors.deepOrange),
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
@@ -36,7 +36,7 @@ class _SearchRestoPageState extends State<SearchResto> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
+            const Text(
               'Find Your\nFavorite Food!',
               style: TextStyle(
                 fontSize: 32,
@@ -50,7 +50,7 @@ class _SearchRestoPageState extends State<SearchResto> {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(25),
               ),
-              child: TextField(
+              child: const TextField(
                 decoration: InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(Icons.search),
@@ -61,7 +61,7 @@ class _SearchRestoPageState extends State<SearchResto> {
               ),
             ),
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               height: 40,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -83,8 +83,8 @@ class _SearchRestoPageState extends State<SearchResto> {
               ),
             ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
+            const Padding(
+              padding: EdgeInsets.only(left: 4.0),
               child: Text(
                 'Belum ada pencarian',
                 style: TextStyle(
@@ -94,7 +94,7 @@ class _SearchRestoPageState extends State<SearchResto> {
                 ),
               ),
             ),
-            Expanded(
+            const Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -133,7 +133,7 @@ class _SearchRestoPageState extends State<SearchResto> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
       child: Text(title),
     );

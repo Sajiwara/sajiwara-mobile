@@ -77,13 +77,13 @@ class ReviewPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: Row(
+                      child: const Row(
                         children: [
-                          const Icon(Icons.search, color: Colors.grey),
-                          const SizedBox(width: 8.0),
+                          Icon(Icons.search, color: Colors.grey),
+                          SizedBox(width: 8.0),
                           Expanded(
                             child: TextField(
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 hintText: "Find Restaurants...",
                                 border: InputBorder.none,
                               ),

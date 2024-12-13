@@ -38,7 +38,7 @@ class MyHomePage extends StatelessWidget {
                   Colors.white, // Mengubah warna ikon hamburger menjadi putih
             ),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
+              title: const Text(
                 'Sajiwara',
                 style: TextStyle(
                   color: Colors.white,
@@ -116,10 +116,10 @@ class ItemCard extends StatelessWidget {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                WishlistResto(),
+                const WishlistResto(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
-              var begin = Offset(1.0, 0.0);
+              var begin = const Offset(1.0, 0.0);
               var end = Offset.zero;
               var curve = Curves.easeInOutQuart;
               var tween =

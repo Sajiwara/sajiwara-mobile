@@ -97,7 +97,7 @@ class _WishlistRestoPageState extends State<WishlistResto> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WishlistRestoFormPage(),
+                          builder: (context) => const WishlistRestoFormPage(),
                         ),
                       );
                       // Add button action
@@ -133,7 +133,7 @@ class _WishlistRestoPageState extends State<WishlistResto> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WishlistRestoEntryPage(),
+                          builder: (context) => const WishlistRestoEntryPage(),
                         ),
                       );
                       // View button action
