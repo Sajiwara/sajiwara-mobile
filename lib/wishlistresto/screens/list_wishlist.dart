@@ -39,6 +39,55 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
     }
   }
 
+  Future<void> markAsVisited(BuildContext context, String id) async {
+    final request = context.read<CookieRequest>();
+    final url =
+        'http://127.0.0.1:8000/wishlist/visited-flutter/$id/'; // Ganti sesuai URL Django Anda
+
+    try {
+      final response = await request.post(url, {});
+
+      if (response['status']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Marked as visited!')),
+        );
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to mark as visited')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
+  Future<void> deleteWishlist(BuildContext context, String id) async {
+    final request = context.read<CookieRequest>();
+    final url = 'http://127.0.0.1:8000/wishlist/deletewishlist-flutter/$id/';
+
+    try {
+      final response = await request.post(url, {});
+
+      if (response['status']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Wishlist deleted successfully')),
+        );
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to delete wishlist')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
@@ -98,7 +147,7 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/empty_wishlist.png', // Add an empty state image
+                    'assets/empty_wishlist.png',
                     height: 200,
                   ),
                   const SizedBox(height: 16),
@@ -113,7 +162,12 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
                   const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () {
-                      // TODO: Navigate to add restaurant page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WishlistRestoFormPage(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF6B6B),
@@ -133,76 +187,81 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
             itemCount: snapshot.data!.length,
             itemBuilder: (_, index) {
               final wishlistItem = snapshot.data![index];
-              return Dismissible(
-                key: Key(wishlistItem.pk.toString()),
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 20),
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
-                direction: DismissDirection.endToStart,
-                onDismissed: (direction) {
-                  // TODO: Implement delete functionality
-                },
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16),
+                  leading: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF6B6B).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.restaurant,
+                      color: Color(0xFFFF6B6B),
+                    ),
+                  ),
+                  title: Text(
+                    wishlistItem.fields.restaurantWanted,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  subtitle: Text(
+                    wishlistItem.fields.visited ? "Visited" : "Not Visited Yet",
+                    style: TextStyle(
+                      color: wishlistItem.fields.visited
+                          ? Colors.green
+                          : Colors.orange,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (!wishlistItem.fields.visited)
+                        ElevatedButton(
+                          onPressed: () =>
+                              markAsVisited(context, wishlistItem.pk),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF6B6B),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text(
+                            'Mark as Visited',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      IconButton(
+                        onPressed: () =>
+                            deleteWishlist(context, wishlistItem.pk),
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
                       ),
                     ],
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16),
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFF6B6B).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.restaurant,
-                        color: Color(0xFFFF6B6B),
-                      ),
-                    ),
-                    title: Text(
-                      wishlistItem.fields.restaurantWanted,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    subtitle: Text(
-                      wishlistItem.fields.visited
-                          ? "Visited"
-                          : "Not Visited Yet",
-                      style: TextStyle(
-                        color: wishlistItem.fields.visited
-                            ? Colors.green
-                            : Colors.orange,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    trailing: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.grey,
-                    ),
-                    onTap: () {
-                      // TODO: Navigate to restaurant details
-                    },
                   ),
                 ),
               );
@@ -212,7 +271,6 @@ class _WishlistRestoPageState extends State<WishlistRestoEntryPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to add new restaurant page
           Navigator.push(
             context,
             MaterialPageRoute(
