@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:sajiwara/screens/login.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
 import 'package:sajiwara/review/screens/review.dart';
 import 'package:sajiwara/search/screens/search_menu.dart';
+
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
@@ -20,6 +23,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -28,6 +32,10 @@ class MyHomePage extends StatelessWidget {
             expandedHeight: 300.0,
             floating: false,
             pinned: true,
+            iconTheme: const IconThemeData(
+              color:
+                  Colors.white, // Mengubah warna ikon hamburger menjadi putih
+            ),
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 'Sajiwara',
@@ -38,7 +46,7 @@ class MyHomePage extends StatelessWidget {
                   shadows: [
                     Shadow(
                       blurRadius: 10.0,
-                      color: Colors.black54,
+                      color: Colors.black38,
                       offset: Offset(2.0, 2.0),
                     ),
                   ],
@@ -76,7 +84,7 @@ class MyHomePage extends StatelessWidget {
               mainAxisSpacing: 16.0,
               crossAxisSpacing: 16.0,
               children: items.map((ItemHomepage item) {
-                return ItemCard(item);
+                return ItemCard(item, request);
               }).toList(),
             ),
           ),
@@ -98,9 +106,9 @@ class ItemHomepage {
 class ItemCard extends StatelessWidget {
   final ItemHomepage item;
 
-  const ItemCard(this.item, {super.key});
+  const ItemCard(this.item, CookieRequest request, {super.key});
 
-  void _handleItemTap(BuildContext context) {
+  void _handleItemTap(BuildContext context, CookieRequest request) async {
     switch (item.name) {
       case "Add Wishlist Resto":
         Navigator.push(
@@ -125,11 +133,22 @@ class ItemCard extends StatelessWidget {
         );
         break;
       case "Logout":
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-          (Route<dynamic> route) => false,
-        );
+        final response = await request.logout(
+            // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+            "http://127.0.0.1:8000/auth/logout/");
+        String message = response["message"];
+        if (context.mounted) {
+          if (response['status']) {
+            String uname = response["username"];
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("$message Sampai jumpa, $uname."),
+            ));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          }
+        }
         break;
       case "Review":
         Navigator.push(
@@ -166,6 +185,7 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Card(
       elevation: 8,
       shape: RoundedRectangleBorder(
@@ -173,7 +193,7 @@ class ItemCard extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => _handleItemTap(context),
+        onTap: () => _handleItemTap(context, request),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
