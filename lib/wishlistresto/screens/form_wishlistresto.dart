@@ -20,8 +20,8 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
   bool _isLoading = false;
 
   Future<void> addToWishlist(String restaurant, CookieRequest request) async {
-    final url =
-        Uri.parse('http://127.0.0.1:8000/wishlist/add-to-wishlist-flutter/');
+    // final url =
+    //     Uri.parse('http://127.0.0.1:8000/wishlist/add-to-wishlist-flutter/');
 
     try {
       final response = await request.post(
