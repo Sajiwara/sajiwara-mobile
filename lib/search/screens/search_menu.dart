@@ -56,7 +56,8 @@ class _SearchRestoPageState extends State<SearchResto> {
                   prefixIcon: Icon(Icons.search),
                   suffixIcon: Icon(Icons.tune),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 ),
               ),
             ),
@@ -127,8 +128,10 @@ class _SearchRestoPageState extends State<SearchResto> {
         });
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: _selectedIndex == index ? Colors.white : Colors.black87,
-        backgroundColor: _selectedIndex == index ? Colors.deepOrange : Colors.grey[200],
+        foregroundColor:
+            _selectedIndex == index ? Colors.white : Colors.black87,
+        backgroundColor:
+            _selectedIndex == index ? Colors.deepOrange : Colors.grey[200],
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

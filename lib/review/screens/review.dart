@@ -34,7 +34,8 @@ class ReviewPage extends StatelessWidget {
               // Use percentage-based margin
               margin: EdgeInsets.symmetric(
                 horizontal: screenWidth * 0.05, // 5% of screen width
-                vertical: screenWidth * 0.03, // 3% of screen width for vertical margin
+                vertical: screenWidth *
+                    0.03, // 3% of screen width for vertical margin
               ),
               decoration: BoxDecoration(
                 color: Colors.white,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
+import 'package:sajiwara/wishlistmenu/screens/form_wishlistmenu.dart';
+import 'package:sajiwara/wishlistmenu/screens/list_wishlistmenu.dart';
 
 class WishlistMenu extends StatefulWidget {
   const WishlistMenu({super.key});
@@ -95,7 +97,8 @@ class _WishlistMenuPageState extends State<WishlistMenu> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const WishlistMenu(), ///////////////////////////////
+                          builder: (context) =>
+                              const WishlistMenu(), ///////////////////////////////
                         ),
                       );
                       // Add button action
@@ -131,7 +134,8 @@ class _WishlistMenuPageState extends State<WishlistMenu> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const WishlistMenu(), ////////////////
+                          builder: (context) =>
+                              const WishlistMenu(), ////////////////
                         ),
                       );
                       // View button action

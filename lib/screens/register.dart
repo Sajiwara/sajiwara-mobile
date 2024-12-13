@@ -173,8 +173,8 @@ class _RegisterPageState extends State<RegisterPage>
                           controller: _usernameController,
                           decoration: InputDecoration(
                             labelText: 'Username',
-                            prefixIcon:
-                                const Icon(Icons.person, color: Colors.deepOrange),
+                            prefixIcon: const Icon(Icons.person,
+                                color: Colors.deepOrange),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
                             ),
@@ -198,8 +198,8 @@ class _RegisterPageState extends State<RegisterPage>
                           obscureText: !_passwordVisible,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            prefixIcon:
-                                const Icon(Icons.lock, color: Colors.deepOrange),
+                            prefixIcon: const Icon(Icons.lock,
+                                color: Colors.deepOrange),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _passwordVisible
@@ -288,7 +288,8 @@ class _RegisterPageState extends State<RegisterPage>
                             ),
                           ),
                           child: _isLoading
-                              ? const CircularProgressIndicator(color: Colors.white)
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
                               : const Text('Register',
                                   style: TextStyle(color: Colors.white)),
                         )
