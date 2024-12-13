@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:sajiwara/screens/login.dart';
+import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
 import 'package:sajiwara/review/screens/review.dart';
 import 'package:sajiwara/search/screens/search_menu.dart';
+
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
@@ -152,6 +154,14 @@ class ItemCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => const WishlistMenu(),
+          ),
+        );
+        break;
+      case "Explore Makanan":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MakananList(),
           ),
         );
         break;
