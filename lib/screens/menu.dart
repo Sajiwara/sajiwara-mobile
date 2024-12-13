@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sajiwara/screens/login.dart';
+import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
@@ -171,6 +172,14 @@ class ItemCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => const WishlistMenu(),
+          ),
+        );
+        break;
+      case "Explore Makanan":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MakananList(),
           ),
         );
         break;
