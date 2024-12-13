@@ -5,7 +5,7 @@ import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
 import 'package:sajiwara/review/screens/review.dart';
-import 'package:sajiwara/search/screens/search_menu.dart';
+
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
@@ -136,14 +136,6 @@ class ItemCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => const ReviewPage(),
-          ),
-        );
-        break;
-      case "Search":
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SearchResto(),
           ),
         );
         break;
