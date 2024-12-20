@@ -159,6 +159,14 @@ class ItemCard extends StatelessWidget {
           ),
         );
         break;
+      case "Search":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SearchResto(),
+          ),
+        );
+        break;
       case "Add Wishlist Food":
         Navigator.push(
           context,

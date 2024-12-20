@@ -1,237 +1,255 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../models/wishlistmenu_entry.dart';
-import 'package:sajiwara/screens/login.dart';
-import 'package:sajiwara/screens/menu.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
-class FormWishListMenu extends StatefulWidget {
-  const FormWishListMenu({super.key});
+class WishlistMenuFormPage extends StatefulWidget {
+  const WishlistMenuFormPage({super.key});
 
   @override
-  State<FormWishListMenu> createState() => _FormWishListMenuState();
+  State<WishlistMenuFormPage> createState() => _WishlistMenuFormPageState();
 }
 
-class _FormWishListMenuState extends State<FormWishListMenu> {
-  List<Menu> _menus = [];
-  List<Restaurant> _restaurants = [];
-  Menu? _selectedMenu;
-  Restaurant? _selectedRestaurant;
-  bool _isLoading = true;
-  String? _error;
+class _WishlistMenuFormPageState extends State<WishlistMenuFormPage> {
+  final _formKey = GlobalKey<FormState>();
+  String? _selectedMenu;
+  String? _selectedRestaurant;
+  List<String> _menus = [];
+  List<Map<String, dynamic>> _restaurants = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _loadMenus();
+    _fetchMenus();
   }
 
-  Future<void> _loadMenus() async {
+  Future<void> _fetchMenus() async {
+    setState(() => _isLoading = true);
     try {
-      setState(() => _isLoading = true);
-      final menus = await WishlistMenuApi.getMenus();
-      setState(() {
-        _menus = menus;
-        _isLoading = false;
-        _error = null;
-      });
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/wishlistmenu/menus/'),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _menus = List<String>.from(data);
+        });
+      } else {
+        throw Exception('Failed to load menus');
+      }
     } catch (e) {
-      setState(() {
-        _error = 'Gagal memuat daftar menu: ${e.toString()}';
-        _isLoading = false;
-      });
+      showSnackBar("Error fetching menus: $e");
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
-  Future<void> _loadRestaurants(String menuName) async {
+  Future<void> _fetchRestaurants(String menu) async {
+    setState(() => _isLoading = true);
     try {
-      setState(() => _isLoading = true);
-      final response = await WishlistMenuApi.getRestaurants(menuName);
-      setState(() {
-        _restaurants = response;
-        _isLoading = false;
-      });
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/wishlistmenu/restaurants/?menu=$menu'),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _restaurants = List<Map<String, dynamic>>.from(data);
+          _selectedRestaurant = null;
+        });
+      } else {
+        throw Exception('Failed to load restaurants');
+      }
     } catch (e) {
-      setState(() {
-        _error = 'Gagal memuat daftar restoran: ${e.toString()}';
-        _isLoading = false;
-      });
+      showSnackBar("Error fetching restaurants: $e");
+    } finally {
+      setState(() => _isLoading = false);
     }
+  }
+
+  Future<void> _submitForm() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final request = context.read<CookieRequest>();
+      
+      final response = await request.post(
+        'http://127.0.0.1:8000/wishlistmenu/add-to-wishlistmenu/',
+        {
+          'menu': _selectedMenu,
+          'restaurant': _selectedRestaurant,
+        },
+      );
+
+      if (!mounted) return;
+
+      if (response['success']) {
+        showSnackBar("Successfully added to wishlist!", isError: false);
+        Navigator.pop(context, true);
+      } else {
+        throw Exception(response['message'] ?? 'Failed to add to wishlist');
+      }
+    } catch (e) {
+      showSnackBar("Error: $e");
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void showSnackBar(String message, {bool isError = true}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Add to Wishlist',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _error != null
-                ? Center(child: Text(_error!))
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Tambah Wishlist Menu',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepOrange[700],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      DropdownButtonFormField<Menu>(
-                        value: _selectedMenu,
-                        decoration: InputDecoration(
-                          labelText: 'Pilih Menu',
-                          labelStyle: TextStyle(color: Colors.deepOrange[700]),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.deepOrange[200]!),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.deepOrange[200]!),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.deepOrange[400]!),
+        backgroundColor: Colors.deepOrange,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Select Menu and Restaurant',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        items: _menus.map((Menu menu) {
-                          return DropdownMenuItem<Menu>(
-                            value: menu,
-                            child: Text(menu.menu),
-                          );
-                        }).toList(),
-                        onChanged: (Menu? newValue) {
-                          setState(() {
-                            _selectedMenu = newValue;
-                            _selectedRestaurant = null;
-                          });
-                          if (newValue != null) {
-                            _loadRestaurants(newValue.menu);
-                          }
-                        },
-                        hint: const Text('Pilih Menu'),
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: DropdownButtonFormField<Restaurant>(
-                          value: _selectedRestaurant,
-                          isExpanded: true,
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+                          value: _selectedMenu,
                           decoration: InputDecoration(
-                            labelText: 'Pilih Restoran',
-                            labelStyle: TextStyle(color: Colors.deepOrange[700]),
+                            labelText: 'Menu',
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.deepOrange[200]!),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.deepOrange[200]!),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.deepOrange[400]!),
-                            ),
+                            prefixIcon: const Icon(Icons.restaurant_menu),
                           ),
-                          items: _restaurants.map((Restaurant restaurant) {
-                            return DropdownMenuItem<Restaurant>(
-                              value: restaurant,
-                              child: Text(
-                                restaurant.name,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: const TextStyle(fontSize: 14),
-                              ),
+                          items: _menus.map((menu) {
+                            return DropdownMenuItem(
+                              value: menu,
+                              child: Text(menu),
                             );
                           }).toList(),
-                          onChanged: _selectedMenu == null
-                              ? null
-                              : (Restaurant? newValue) {
-                                  setState(() {
-                                    _selectedRestaurant = newValue;
-                                  });
-                                },
-                          hint: const Text('Pilih Restoran'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a menu';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                _selectedMenu = value;
+                                _selectedRestaurant = null;
+                              });
+                              _fetchRestaurants(value);
+                            }
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              'Batal',
-                              style: TextStyle(color: Colors.deepOrange[300]),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: (_selectedMenu != null &&
-                                    _selectedRestaurant != null)
-                                ? () async {
-                                    try {
-                                      await WishlistMenuApi.addToWishlist(
-                                        _selectedMenu!.menu,
-                                        _selectedRestaurant!.id,
-                                      );
-                                      Navigator.pop(context, true);
-                                    } catch (e) {
-                                      String message = 'Gagal menambahkan ke wishlist';
-                                      if (e.toString().contains('login')) {
-                                        message = 'Silakan login terlebih dahulu';
-                                        Navigator.pushReplacementNamed(
-                                          context, 
-                                          '/authentication/login'
-                                        );
-                                      }
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(message),
-                                          duration: const Duration(seconds: 2),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepOrange[400],
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                        const SizedBox(height: 16),
+                        if (_restaurants.isNotEmpty) ...[
+                          DropdownButtonFormField<String>(
+                            value: _selectedRestaurant,
+                            decoration: InputDecoration(
+                              labelText: 'Restaurant',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
+                              prefixIcon: const Icon(Icons.store),
                             ),
-                            child: const Text(
-                              'Simpan',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            items: _restaurants.map((restaurant) {
+                              return DropdownMenuItem(
+                                value: restaurant['id'].toString(),
+                                child: Text(restaurant['name']),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a restaurant';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() => _selectedRestaurant = value);
+                            },
                           ),
                         ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Add to Wishlist',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
