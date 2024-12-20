@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:sajiwara/tipemakanan/screens/edit_makanan.dart';
 import 'package:sajiwara/tipemakanan/models/models_tipemakanan.dart';
+import 'package:sajiwara/widgets/left_drawer.dart';
 
 class MakananList extends StatefulWidget {
   const MakananList({super.key});
@@ -46,8 +46,9 @@ class _MakananListState extends State<MakananList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Explore Makanan'),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.white,
       ),
+      drawer: const LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
@@ -65,7 +66,7 @@ class _MakananListState extends State<MakananList> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    color: Colors.orange.shade300,
+                    color: Colors.black,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -75,7 +76,7 @@ class _MakananListState extends State<MakananList> {
                             makanan.fields.restoran,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -84,7 +85,16 @@ class _MakananListState extends State<MakananList> {
                                 .toString()
                                 .split('.')
                                 .last,
-                            style: const TextStyle(color: Colors.white70),
+                            style: const TextStyle(color: Colors.black87),
+                          ),
+                          const SizedBox(height: 4),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Text(
+                                makanan.fields.menu,
+                                style: const TextStyle(color: Colors.black54),
+                              ),
+                            ),
                           ),
                           const Spacer(),
                           ElevatedButton(
@@ -92,13 +102,14 @@ class _MakananListState extends State<MakananList> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditMakanan(id: makanan.pk),
+                                  builder: (context) => EditMakanan(
+                                    id: makanan.pk,
+                                  ),
                                 ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange.shade700,
+                              backgroundColor: Colors.red,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
