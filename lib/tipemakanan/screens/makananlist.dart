@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:sajiwara/tipemakanan/screens/edit_makanan.dart';
 import 'package:sajiwara/tipemakanan/models/models_tipemakanan.dart';
+import 'package:sajiwara/widgets/left_drawer.dart';
 
 class MakananList extends StatefulWidget {
   const MakananList({super.key});
@@ -48,6 +48,7 @@ class _MakananListState extends State<MakananList> {
         title: const Text('Explore Makanan'),
         backgroundColor: Colors.orange,
       ),
+      drawer: const LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
@@ -86,19 +87,29 @@ class _MakananListState extends State<MakananList> {
                                 .last,
                             style: const TextStyle(color: Colors.white70),
                           ),
+                          const SizedBox(height: 4),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Text(
+                                makanan.fields.menu,
+                                style: const TextStyle(color: Colors.white60),
+                              ),
+                            ),
+                          ),
                           const Spacer(),
                           ElevatedButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditMakanan(id: makanan.pk),
+                                  builder: (context) => EditMakanan(
+                                    id: makanan.pk,
+                                  ),
                                 ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange.shade700,
+                              backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
