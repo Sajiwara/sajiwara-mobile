@@ -41,7 +41,8 @@ class _SearchRestoPageState extends State<SearchResto> {
   }
 
   Future<List<Restaurant>> fetchProduct(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/search/json/');
+    final response = await request.get(
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/search/json/');
     var data = response;
 
     List<Restaurant> listProduct = [];
@@ -124,7 +125,7 @@ class _SearchRestoPageState extends State<SearchResto> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
+            Text(
               'Find Your\nFavorite Food!',
               style: TextStyle(
                 fontSize: 32,
@@ -155,8 +156,8 @@ class _SearchRestoPageState extends State<SearchResto> {
               ),
             ),
             const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.only(left: 4.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0),
               child: Text(
                 _searchMessage,
                 style: TextStyle(

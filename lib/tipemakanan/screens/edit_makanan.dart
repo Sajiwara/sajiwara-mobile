@@ -23,7 +23,8 @@ class _EditMakananState extends State<EditMakanan> {
   Future<void> fetchMakananDetail() async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/tipemakanan/json/${widget.id}/'),
+        Uri.parse(
+            'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/json/${widget.id}/'),
       );
 
       if (response.statusCode == 200) {
@@ -55,7 +56,7 @@ class _EditMakananState extends State<EditMakanan> {
       print("halo");
       final response = await http.post(
         Uri.parse(
-            'http://127.0.0.1:8000/tipemakanan/edit-flutter/${widget.id}/'),
+            'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/edit-flutter/${widget.id}/'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'restoran': namaController.text,
