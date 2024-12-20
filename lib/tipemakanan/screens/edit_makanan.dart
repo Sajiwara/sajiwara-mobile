@@ -54,31 +54,32 @@ class _EditMakananState extends State<EditMakanan> {
   Future<void> updateMakanan(CookieRequest request) async {
     try {
       print("halo");
-      final response = await http.post(
-        Uri.parse(
-            'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/edit-flutter/${widget.id}/'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
+      final response = await request.post(
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/edit-flutter/${widget.id}/',
+        json.encode({
           'restoran': namaController.text,
           'preferensi': preferensiController.text,
           'menu': menuController.text,
         }),
+        // Uri.parse(
+        //     'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/edit-flutter/${widget.id}/'),
+        // headers: {'Content-Type': 'application/json'},
+        // body: json.encode({
+        //   'restoran': namaController.text,
+        //   'preferensi': preferensiController.text,
+        //   'menu': menuController.text,
+        // }),
       );
       print("watashi");
-      print(response.statusCode);
-
-      if (response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MakananList(),
-          ),
-        );
-      } else {
-        throw Exception('Failed to update makanan');
-      }
+      // print(response.statusCode);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MakananList(),
+        ),
+      );
     } catch (e) {
-      print("Error updating data: $e");
+      print("Error updating dataaaa: $e");
     }
   }
 
