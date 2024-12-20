@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
+import 'package:sajiwara/wishlistresto/screens/list_wishlist.dart';
 
 class WishlistRestoFormPage extends StatefulWidget {
   const WishlistRestoFormPage({super.key});
@@ -24,7 +25,8 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
 
     try {
       final response = await request.post(
-        'http://127.0.0.1:8000/wishlist/add-to-wishlist-flutter/',
+        // 'http://127.0.0.1:8000/wishlist/add-to-wishlist-flutter/',
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/add-to-wishlist-flutter/',
         convert.jsonEncode({
           'restaurant_wanted': restaurant,
           'wanted_resto': true,
@@ -165,7 +167,13 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
                             backgroundColor: Colors.deepOrange[400],
                           ),
                         );
-                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const WishlistRestoEntryPage(),
+                          ),
+                        );
                       }
                     }
                   },

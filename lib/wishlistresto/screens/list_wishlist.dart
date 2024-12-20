@@ -16,7 +16,9 @@ class _WishlistRestoEntryPageState extends State<WishlistRestoEntryPage> {
   Future<List<WishlistResto>> fetchWishlistResto(CookieRequest request) async {
     try {
       final response =
-          await request.get('http://127.0.0.1:8000/wishlist/json/');
+          // await request.get('http://127.0.0.1:8000/wishlist/json/');
+          await request.get(
+              'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/json/');
 
       if (response is String && response.contains('<html>')) {
         throw const FormatException('Invalid response format: HTML received');
@@ -39,7 +41,9 @@ class _WishlistRestoEntryPageState extends State<WishlistRestoEntryPage> {
 
   Future<void> markAsVisited(BuildContext context, String id) async {
     final request = context.read<CookieRequest>();
-    final url = 'http://127.0.0.1:8000/wishlist/visited-flutter/$id/';
+    // final url = 'http://127.0.0.1:8000/wishlist/visited-flutter/$id/';
+    final url =
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/visited-flutter/$id/';
 
     try {
       final response = await request.post(url, {});
@@ -63,7 +67,10 @@ class _WishlistRestoEntryPageState extends State<WishlistRestoEntryPage> {
 
   Future<void> deleteWishlist(BuildContext context, String id) async {
     final request = context.read<CookieRequest>();
-    final url = 'http://127.0.0.1:8000/wishlist/deletewishlist-flutter/$id/';
+    // final url = 'http://127.0.0.1:8000/wishlist/deletewishlist-flutter/$id/';
+
+    final url =
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/deletewishlist-flutter/$id/';
 
     try {
       final response = await request.post(url, {});
@@ -186,7 +193,7 @@ class _WishlistRestoEntryPageState extends State<WishlistRestoEntryPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/empty_wishlist.png',
+                          'assets/images/empty_wishlist.png',
                           height: 200,
                         ),
                         const SizedBox(height: 16),

@@ -42,7 +42,11 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   void _handleRegister(BuildContext context, CookieRequest request) async {
-    if (!_formKey.currentState!.validate()) return;
+    print("test");
+    if (!_formKey.currentState!.validate()) {
+      print("halo");
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -65,8 +69,12 @@ class _RegisterPageState extends State<RegisterPage>
       return;
     }
 
-    final response = await request.postJson(
-      "http://127.0.0.1:8000/auth/register/",
+    print("dimana");
+
+    final response = await request.post(
+      // "http://127.0.0.1:8000/auth/register/",
+
+      "https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/auth/register/",
       jsonEncode({
         "username": username,
         "password1": password1,
@@ -77,6 +85,8 @@ class _RegisterPageState extends State<RegisterPage>
     setState(() {
       _isLoading = false;
     });
+
+    print("disini");
 
     if (context.mounted) {
       if (response['status'] == 'success') {
