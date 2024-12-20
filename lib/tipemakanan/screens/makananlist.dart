@@ -72,8 +72,14 @@ class _MakananListState extends State<MakananList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Explore Makanan'),
+        title: Text(
+          'Explore Makanan',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
+        centerTitle: true,
         backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
       ),
       drawer: const LeftDrawer(),
       body: Padding(
