@@ -1,25 +1,25 @@
 // To parse this JSON data, do
 //
-//     final restoEntry = restoEntryFromJson(jsonString);
+//     final restaurant = restaurantFromJson(jsonString);
 
 import 'dart:convert';
 
-List<RestoEntry> restoEntryFromJson(String str) => List<RestoEntry>.from(json.decode(str).map((x) => RestoEntry.fromJson(x)));
+List<Restaurant> restaurantFromJson(String str) => List<Restaurant>.from(json.decode(str).map((x) => Restaurant.fromJson(x)));
 
-String restoEntryToJson(List<RestoEntry> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String restaurantToJson(List<Restaurant> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class RestoEntry {
+class Restaurant {
     Model model;
     String pk;
     Fields fields;
 
-    RestoEntry({
+    Restaurant({
         required this.model,
         required this.pk,
         required this.fields,
     });
 
-    factory RestoEntry.fromJson(Map<String, dynamic> json) => RestoEntry(
+    factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
         model: modelValues.map[json["model"]]!,
         pk: json["pk"],
         fields: Fields.fromJson(json["fields"]),
