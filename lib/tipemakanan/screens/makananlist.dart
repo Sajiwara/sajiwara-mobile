@@ -46,7 +46,7 @@ class _MakananListState extends State<MakananList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Explore Makanan'),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
       body: Padding(
@@ -66,7 +66,7 @@ class _MakananListState extends State<MakananList> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    color: Colors.orange.shade300,
+                    color: Colors.black,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -76,7 +76,7 @@ class _MakananListState extends State<MakananList> {
                             makanan.fields.restoran,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -85,14 +85,14 @@ class _MakananListState extends State<MakananList> {
                                 .toString()
                                 .split('.')
                                 .last,
-                            style: const TextStyle(color: Colors.white70),
+                            style: const TextStyle(color: Colors.black87),
                           ),
                           const SizedBox(height: 4),
                           Expanded(
                             child: SingleChildScrollView(
                               child: Text(
                                 makanan.fields.menu,
-                                style: const TextStyle(color: Colors.white60),
+                                style: const TextStyle(color: Colors.black54),
                               ),
                             ),
                           ),
@@ -109,7 +109,7 @@ class _MakananListState extends State<MakananList> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: Colors.red,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),

@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 
 class EditMakanan extends StatefulWidget {
@@ -20,7 +23,7 @@ class _EditMakananState extends State<EditMakanan> {
   Future<void> fetchMakananDetail() async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/tipemakanan/${widget.id}/json/'),
+        Uri.parse('http://127.0.0.1:8000/tipemakanan/json/${widget.id}/'),
       );
 
       if (response.statusCode == 200) {
@@ -47,10 +50,12 @@ class _EditMakananState extends State<EditMakanan> {
     }
   }
 
-  Future<void> updateMakanan() async {
+  Future<void> updateMakanan(CookieRequest request) async {
     try {
+      print("halo");
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/tipemakanan/edit/${widget.id}/'),
+        Uri.parse(
+            'http://127.0.0.1:8000/tipemakanan/edit-flutter/${widget.id}/'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'restoran': namaController.text,
@@ -58,9 +63,16 @@ class _EditMakananState extends State<EditMakanan> {
           'menu': menuController.text,
         }),
       );
+      print("watashi");
+      print(response.statusCode);
 
       if (response.statusCode == 200) {
-        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MakananList(),
+          ),
+        );
       } else {
         throw Exception('Failed to update makanan');
       }
@@ -77,10 +89,11 @@ class _EditMakananState extends State<EditMakanan> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Makanan'),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
       body: isLoading
@@ -121,9 +134,11 @@ class _EditMakananState extends State<EditMakanan> {
                   ),
                   const Spacer(),
                   ElevatedButton(
-                    onPressed: updateMakanan,
+                    onPressed: () async {
+                      updateMakanan(request);
+                    },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),
                       shape: RoundedRectangleBorder(
