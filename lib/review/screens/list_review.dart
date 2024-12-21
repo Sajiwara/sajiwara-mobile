@@ -104,14 +104,22 @@ class _ReviewListPageState extends State<ReviewListPage> {
         title: const Text("Reviews"),
         actions: [
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
                       ReviewEntryFormPage(restaurantId: widget.id),
                 ),
               );
+
+              if (result == true) {
+                // Perbarui data jika ada perubahan
+                setState(() {
+                  _reviewListFuture =
+                      fetchReviews(context.read<CookieRequest>());
+                });
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFF6B6B),
@@ -127,6 +135,30 @@ class _ReviewListPageState extends State<ReviewListPage> {
               ),
             ),
           ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) =>
+          //             ReviewEntryFormPage(restaurantId: widget.id),
+          //       ),
+          //     );
+          //   },
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: const Color(0xFFFF6B6B),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),
+          //   ),
+          //   child: const Text(
+          //     'Add Review',
+          //     style: TextStyle(
+          //       color: Colors.white,
+          //       fontSize: 12,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       backgroundColor: Colors.orange,
@@ -172,7 +204,8 @@ class _ReviewListPageState extends State<ReviewListPage> {
                                     if (updatedReviewText != null) {
                                       setState(() {
                                         // Cari review yang sesuai dan update teksnya
-                                        review.fields.review = updatedReviewText;
+                                        review.fields.review =
+                                            updatedReviewText;
                                       });
                                     }
                                   });
@@ -181,7 +214,6 @@ class _ReviewListPageState extends State<ReviewListPage> {
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
-                                  Navigator.of(context).pop(); // Close dialog
                                   deleteReview(
                                       review.pk); // Call delete function
                                 },

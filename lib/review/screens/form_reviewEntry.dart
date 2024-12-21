@@ -64,7 +64,6 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                   },
                 ),
               ),
-              
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -83,7 +82,6 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                             'restaurant': widget.restaurantId,
                             'review': _review,
                           }),
-                          
                         );
                         if (context.mounted) {
                           if (response['status'] == 'success') {
@@ -91,11 +89,8 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                                 .showSnackBar(const SnackBar(
                               content: Text("Review baru berhasil disimpan!"),
                             ));
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RestaurantPage()),
-                            );
+                            Navigator.pop(context,
+                                true); // Kirim argumen true untuk menandakan bahwa data telah berubah
                           } else {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
