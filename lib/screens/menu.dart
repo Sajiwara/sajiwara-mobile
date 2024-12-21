@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sajiwara-mobile/widgets/left';
 
 class MyHomePage extends StatelessWidget {
   final String npm = '5000000000'; // NPM
@@ -20,7 +21,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         // Judul aplikasi "Mental Health Tracker" dengan teks putih dan tebal.
         title: const Text(
-          'Mental Health Tracker',
+          'Sajiwara',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

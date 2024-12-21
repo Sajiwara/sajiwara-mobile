@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sajiwara/screens/menu.dart';
+import 'package:sajiwara-mobile/screens/menu.dart';
 
 void main() {
   runApp(const MyApp());
