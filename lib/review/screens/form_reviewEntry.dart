@@ -75,10 +75,8 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                           Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () async {
-                      print("masuk sini");
                       if (_formKey.currentState!.validate()) {
                         // Kirim ke Django dan tunggu respons
-                        print("kirim ke django");
                         final response = await request.post(
                           "http://127.0.0.1:8000/review/create-flutter/",
                           jsonEncode({
@@ -87,8 +85,6 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                           }),
                           
                         );
-                        print("kelar");
-                        print(response);
                         if (context.mounted) {
                           if (response['status'] == 'success') {
                             ScaffoldMessenger.of(context)
@@ -101,7 +97,6 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                                   builder: (context) => RestaurantPage()),
                             );
                           } else {
-                            print("GAHAHAHA ERROR");
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content: Text(

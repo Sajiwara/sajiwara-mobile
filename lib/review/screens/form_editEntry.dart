@@ -36,9 +36,12 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
     final url = Uri.parse('http://127.0.0.1:8000/review/edit-flutter/${widget.reviewId}/');
     final response = await http.post(
       url,
-      body: {
-        'review_text': _formKey.toString(),
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: json.encode({
+        'review_text': _reviewController.text,
+      }),
     );
 
     print("bisakah");
@@ -47,14 +50,14 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
       final responseData = json.decode(response.body);
       print(responseData);
       if (responseData['status'] == 'success') {
-        Navigator.pop(context, responseData['html']); // Return updated reviews HTML
+        Navigator.pop(
+            context, responseData['html']); // Return updated reviews HTML
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to update review.')),
         );
       }
     } else {
-      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Server error. Please try again later.')),
       );
