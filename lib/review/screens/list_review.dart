@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:sajiwara/review/models/models_Review.dart';
 import 'package:sajiwara/review/screens/form_reviewEntry.dart';
+import 'package:sajiwara/review/screens/form_editEntry.dart';
 
 class ReviewListPage extends StatefulWidget {
   final String id;
@@ -14,58 +16,110 @@ class ReviewListPage extends StatefulWidget {
 
 class _ReviewListPageState extends State<ReviewListPage> {
   late Future<List<Review>> _reviewListFuture;
-  
-  
+  int? currentUserId;
 
-  int currentUserId = 4; //ubah yang ini
+  Future<int?> getUserId(CookieRequest request) async {
+    try {
+      final response =
+          await request.get('http://127.0.0.1:8000/review/get-user-info/');
+      if (response is Map && response.containsKey("id")) {
+        return response["id"];
+      } else {
+        print("Invalid response: $response");
+      }
+    } catch (e) {
+      print("Error fetching user info: $e");
+    }
+    return null;
+  }
 
-  @override
-  void initState() {
-    super.initState();
-    _reviewListFuture = fetchReviews(CookieRequest());
+  Future<void> deleteReview(String reviewId) async {
+    final request = context.read<CookieRequest>();
+    try {
+      final response = await request.post(
+        'http://127.0.0.1:8000/review/delete-flutter/$reviewId/',
+        {'_method': 'DELETE'},
+      );
+
+      if (response['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
+        setState(() {
+          // Refresh review list after deletion
+          _reviewListFuture = fetchReviews(request);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${response['error']}")),
+        );
+      }
+    } catch (e) {
+      print("Error deleting review: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to delete review.")),
+      );
+    }
   }
 
   Future<List<Review>> fetchReviews(CookieRequest request) async {
     try {
-      final response = await request.get('http://127.0.0.1:8000/review/${widget.id}/jsonReview/');
-      print(response); // Debug: Cek data yang diterima dari server
-
-      if (response is String && response.contains('<html>')) {
-        throw FormatException('Invalid response format: HTML content received');
-      }
+      final response = await request
+          .get('http://127.0.0.1:8000/review/${widget.id}/jsonReview/');
 
       if (response is List) {
         return response.map((item) => Review.fromJson(item)).toList();
-      }
-
-      if (response is Map && response.containsKey('data')) {
+      } else if (response is Map && response.containsKey('data')) {
         return (response['data'] as List)
             .map((item) => Review.fromJson(item))
             .toList();
+      } else {
+        throw FormatException('Unexpected response format');
       }
-
-      throw FormatException('Unexpected response format');
-    } catch (e, stackTrace) {
+    } catch (e) {
       print('Error fetching reviews: $e');
-      print('Stack trace: $stackTrace');
       return [];
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    final request = context.read<CookieRequest>();
+
+    getUserId(request).then((id) {
+      setState(() {
+        currentUserId = id;
+      });
+    });
+
+    _reviewListFuture = fetchReviews(request);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final request = context.read<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Reviews"),
         actions: [
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ReviewEntryFormPage(restaurantId: widget.id),
+                  builder: (context) =>
+                      ReviewEntryFormPage(restaurantId: widget.id),
                 ),
               );
+
+              if (result == true) {
+                // Perbarui data jika ada perubahan
+                setState(() {
+                  _reviewListFuture =
+                      fetchReviews(context.read<CookieRequest>());
+                });
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFF6B6B),
@@ -81,6 +135,30 @@ class _ReviewListPageState extends State<ReviewListPage> {
               ),
             ),
           ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) =>
+          //             ReviewEntryFormPage(restaurantId: widget.id),
+          //       ),
+          //     );
+          //   },
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: const Color(0xFFFF6B6B),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),
+          //   ),
+          //   child: const Text(
+          //     'Add Review',
+          //     style: TextStyle(
+          //       color: Colors.white,
+          //       fontSize: 12,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       backgroundColor: Colors.orange,
@@ -90,13 +168,9 @@ class _ReviewListPageState extends State<ReviewListPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
+            return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text("No reviews available."),
-            );
+            return const Center(child: Text("No reviews available."));
           } else {
             final reviews = snapshot.data!;
             return ListView.builder(
@@ -104,48 +178,49 @@ class _ReviewListPageState extends State<ReviewListPage> {
               itemBuilder: (context, index) {
                 final review = reviews[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "User ID: ${review.fields.user}",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Restaurant: ${review.fields.restaurant}",
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Review: ${review.fields.review}",
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Posted on: ${review.fields.datePosted.toLocal()}",
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                        // Show the button only if the current user is the same as the reviewer
-                        if (review.fields.user == currentUserId)
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Action for the button (edit or delete)
-                              },
-                              child: const Text('Edit / Delete'),
-                            ),
-                          ),
-                      ],
-                    ),
+                  child: ListTile(
+                    title: Text("Review: ${review.fields.review}"),
+                    subtitle: Text("User: ${review.fields.user}"),
+                    trailing: currentUserId == review.fields.user
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  // Navigate to edit review form
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditReviewScreen(
+                                        reviewId: review.pk,
+                                        initialReviewText: review.fields.review,
+                                      ),
+                                    ),
+                                  ).then((updatedReviewText) {
+                                    if (updatedReviewText != null) {
+                                      setState(() {
+                                        // Cari review yang sesuai dan update teksnya
+                                        review.fields.review =
+                                            updatedReviewText;
+                                      });
+                                    }
+                                  });
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  deleteReview(
+                                      review.pk); // Call delete function
+                                },
+                              ),
+                            ],
+                          )
+                        : null,
                   ),
                 );
               },

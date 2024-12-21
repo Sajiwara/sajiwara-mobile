@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:sajiwara/search/models/resto_entry.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
@@ -35,7 +33,7 @@ class RestoCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.restaurant_menu, size: 16, color: Colors.black),
-                const SizedBox(width: 4),   
+                const SizedBox(width: 4),
                 Text(
                   jenisMakananValues.reverse[resto.fields.jenisMakanan]!,
                   style: TextStyle(color: Colors.black),
@@ -84,16 +82,16 @@ class RestoCard extends StatelessWidget {
               children: [
                 ElevatedButton.icon(
                   onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WishlistRestoFormPage(
-                            initialRestaurant: resto.fields.nama, // Pass the restaurant name here
-                          ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WishlistRestoFormPage(
+                          initialRestaurant: resto
+                              .fields.nama, // Pass the restaurant name here
                         ),
-                      );
-                      
-                    },
+                      ),
+                    );
+                  },
                   icon: Icon(Icons.favorite_border),
                   label: Text('Add to Wishlist'),
                   style: ElevatedButton.styleFrom(
@@ -112,4 +110,3 @@ class RestoCard extends StatelessWidget {
     );
   }
 }
-

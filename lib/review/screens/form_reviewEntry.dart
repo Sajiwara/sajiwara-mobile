@@ -64,7 +64,6 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                   },
                 ),
               ),
-              
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -75,33 +74,24 @@ class _ReviewEntryFormPageState extends State<ReviewEntryFormPage> {
                           Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () async {
-                      print("masuk sini");
                       if (_formKey.currentState!.validate()) {
                         // Kirim ke Django dan tunggu respons
-                        print("kirim ke django");
                         final response = await request.post(
                           "http://127.0.0.1:8000/review/create-flutter/",
                           jsonEncode({
                             'restaurant': widget.restaurantId,
                             'review': _review,
                           }),
-                          
                         );
-                        print("kelar");
-                        print(response);
                         if (context.mounted) {
                           if (response['status'] == 'success') {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content: Text("Review baru berhasil disimpan!"),
                             ));
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RestaurantPage()),
-                            );
+                            Navigator.pop(context,
+                                true); // Kirim argumen true untuk menandakan bahwa data telah berubah
                           } else {
-                            print("GAHAHAHA ERROR");
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content: Text(

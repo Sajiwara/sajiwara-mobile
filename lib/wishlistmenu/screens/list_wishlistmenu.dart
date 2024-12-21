@@ -32,9 +32,8 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
       if (response != null) {
         List<dynamic> jsonResponse = response;
         setState(() {
-          _wishlistItems = jsonResponse.map((item) => 
-            WishlistMenu.fromJson(item)
-          ).toList();
+          _wishlistItems =
+              jsonResponse.map((item) => WishlistMenu.fromJson(item)).toList();
         });
       }
     } catch (e) {
@@ -147,7 +146,8 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
                           final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const WishlistMenuFormPage(),
+                              builder: (context) =>
+                                  const WishlistMenuFormPage(),
                             ),
                           );
                           if (result == true) {
@@ -181,7 +181,8 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           item.fields.menuWanted,
@@ -193,9 +194,12 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
                                         Text(
                                           'from ${item.fields.restaurant}', // Asumsi keterangan resto ada pada field 'resto'
                                           style: const TextStyle(
-                                            fontSize: 14, // Ukuran font lebih kecil dari menu
-                                            fontFamily: 'Item', // Gaya font "Item" jika sudah terdaftar
-                                            color: Colors.grey, // Warna font lebih lembut
+                                            fontSize:
+                                                14, // Ukuran font lebih kecil dari menu
+                                            fontFamily:
+                                                'Item', // Gaya font "Item" jika sudah terdaftar
+                                            color: Colors
+                                                .grey, // Warna font lebih lembut
                                           ),
                                         ),
                                       ],
