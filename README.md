@@ -24,7 +24,7 @@ Tujuan aplikasi ini adalah untuk membantu para wisatawan khusunya yang baru pert
 Kota Yogyakarta, dengan kekayaan budaya, sejarah, dan pariwisatanya, telah menjadi salah satu destinasi favorit bagi wisatawan. Setiap tahunnya, ribuan pengunjung datang untuk menikmati pesona alam, seni, serta kuliner di Yogyakarta. Namun, wisatawan yang datang untuk pertama kali sering menghadapi kesulitan dalam menemukan informasi yang relevan mengenai tempat makan yang sesuai dengan preferensi mereka. Kekurangan informasi atau rekomendasi wisata kuliner menjadi masalah umum, di mana wisatawan kesulitan mendapatkan data tentang tempat makan yang direkomendasikan, terutama terkait harga, rasa, ulasan, dan lokasi.
 Untuk mengatasi permasalahan ini, aplikasi informasi restoran dirancang sebagai solusi untuk memudahkan pengunjung mencari tempat makan di Yogyakarta. Dengan platform ini, pengguna dapat dengan mudah menemukan restoran berdasarkan kategori, seperti jenis makanan (makanan Indonesia, makanan Cina, makanan Jepang, dan Western), lokasi dari pusat kota, harga rata-rata, rating, variasi menu, dan pelayanan. Hal ini diharapkan dapat memberikan pengalaman kuliner yang lebih nyaman dan terarah bagi pengunjung, baik yang datang untuk liburan singkat maupun jangka panjang.
 
-aplikasi ini tidak hanya dilatarbelakangi untuk memudahkan pengunjung, tetapi juga untuk mendukung usaha lokal di Yogyakarta. Banyak restoran lokal membutuhkan dukungan dalam brand awareness untuk bersaing di industri yang kompetitif. Dengan menampilkan informasi tentang setiap restoran, diharapkan visibilitas mereka meningkat, sehingga lebih banyak pengunjung tertarik untuk mencoba kuliner lokal yang beragam.
+Aplikasi ini tidak hanya dilatarbelakangi untuk memudahkan pengunjung, tetapi juga untuk mendukung usaha lokal di Yogyakarta. Banyak restoran lokal membutuhkan dukungan dalam brand awareness untuk bersaing di industri yang kompetitif. Dengan menampilkan informasi tentang setiap restoran, diharapkan visibilitas mereka meningkat, sehingga lebih banyak pengunjung tertarik untuk mencoba kuliner lokal yang beragam.
 
 Proyek pembuatan aplikasi informasi restoran ini dilatarbelakangi oleh kebutuhan untuk memudahkan pencarian tempat makan yang sesuai dengan selera pengunjung, serta untuk mendorong pertumbuhan ekonomi lokal dengan meningkatkan eksposur restoran-restoran di Yogyakarta.
 
@@ -62,3 +62,12 @@ https://www.kaggle.com/datasets/yudhaislamisulistya/places-to-eat-in-the-jogja-r
 - Merupakan pengguna yang sudah melakukan login sehingga dapat mengakses seluruh fitur-fitur yang dimiliki aplikasi
 
 ## Alur pengintegrasian dengan web service untuk terhubung dengan aplikasi web
+- Melengkapi end-point pada web untuk tiap modul (baik untuk mengambil dan mengirim data), dan membenarkan masing-masing modul dari proyek Django sehingga dapat dijalankan dalam aplikasi flutter.
+- Memanfaatkan package pbp_django_auth untuk mengelola seluruh _cookie_ dan _request_ yang diterima sehingga dapat terintegrasi dengan flutter
+- Menambahkan middleware di django agar API dapat diakses dari luar website.
+- Membuat fungsi async untuk setiap proses yang berkaitan dengan mengambil, mengirim, dan mengubah data.
+- Untuk mengambil data akan digunakan HTTP GET dari end-point data di web yang hasil pemanggilannya akan digunakan untuk ditampilkan pada widget yang digunakan.
+- Untuk mengirim data, akan digunakan HTTP POST yang menuju ke end-point untuk menyimpan data yang ada di database Django.
+
+## Design Aplikasi
+https://www.figma.com/design/02mog4EnCG9xWXxalEh2J7/Desain-web?node-id=0-1&t=hUn5zexL79naJwXn-1
