@@ -4,6 +4,7 @@ import 'package:sajiwara/search/screens/search_menu.dart';
 import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
 import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
+import 'package:sajiwara/review/screens/list_restaurant.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -107,7 +108,12 @@ class LeftDrawer extends StatelessWidget {
                     context: context,
                     icon: Icons.rate_review_outlined,
                     text: 'Ulasan Saya',
-                    onTap: () => _showStyledSnackBar(context, 'Menu Ulasan'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RestaurantPage(),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   _buildDivider(),
