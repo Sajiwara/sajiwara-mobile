@@ -18,7 +18,7 @@ class _SearchRestoPageState extends State<SearchResto> {
   List<Restaurant> _filteredRestaurants = [];
   bool _isLoading = false;
   bool _isSearchInitiated = false; // Flag to check if search has been initiated
-  String _searchMessage ="";
+  String _searchMessage = "";
 
   @override
   void initState() {
@@ -57,16 +57,20 @@ class _SearchRestoPageState extends State<SearchResto> {
     if (query.isNotEmpty) {
       _loadRestaurants().then((_) {
         setState(() {
-           _searchMessage = query.isEmpty ? 'Belum ada pencarian' : 'Hasil pencarian untuk: $query';
+          _searchMessage = query.isEmpty
+              ? 'Belum ada pencarian'
+              : 'Hasil pencarian untuk: $query';
           _filteredRestaurants = _allRestaurants
-              .where((resto) => resto.fields.nama.toLowerCase().contains(query.toLowerCase()))
+              .where((resto) =>
+                  resto.fields.nama.toLowerCase().contains(query.toLowerCase()))
               .toList();
           _isSearchInitiated = true;
+          print(_allRestaurants);
         });
       });
-    }else{
+    } else {
       setState(() {
-        _searchMessage="";
+        _searchMessage = "";
         _isSearchInitiated = false;
         _isLoading = false;
       });
@@ -75,36 +79,38 @@ class _SearchRestoPageState extends State<SearchResto> {
 
   void _onSearchSubmitted(String query) {
     setState(() {
-      
-      
       _isLoading = true;
     });
     _filterRestaurants(query);
   }
-  
+
   void _sortByName() {
-  setState(() {
-    _filteredRestaurants.sort((a, b) => a.fields.nama.compareTo(b.fields.nama));
-  });
-}
+    setState(() {
+      _filteredRestaurants
+          .sort((a, b) => a.fields.nama.compareTo(b.fields.nama));
+    });
+  }
 
-void _sortByRating() {
-  setState(() {
-    _filteredRestaurants.sort((a, b) => b.fields.rating.compareTo(a.fields.rating));
-  });
-}
+  void _sortByRating() {
+    setState(() {
+      _filteredRestaurants
+          .sort((a, b) => b.fields.rating.compareTo(a.fields.rating));
+    });
+  }
 
-void _sortByDistance() {
-  setState(() {
-    _filteredRestaurants.sort((a, b) => a.fields.jarak.compareTo(b.fields.jarak));
-  });
-}
+  void _sortByDistance() {
+    setState(() {
+      _filteredRestaurants
+          .sort((a, b) => a.fields.jarak.compareTo(b.fields.jarak));
+    });
+  }
 
-void _sortByPrice() {
-  setState(() {
-    _filteredRestaurants.sort((a, b) => a.fields.harga.compareTo(b.fields.harga));
-  });
-}
+  void _sortByPrice() {
+    setState(() {
+      _filteredRestaurants
+          .sort((a, b) => a.fields.harga.compareTo(b.fields.harga));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +150,8 @@ void _sortByPrice() {
                     onPressed: _openFilterDialog,
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 ),
               ),
             ),
@@ -190,7 +197,8 @@ void _sortByPrice() {
                           : ListView.builder(
                               itemCount: _filteredRestaurants.length,
                               itemBuilder: (context, index) {
-                                return RestoCard(resto: _filteredRestaurants[index]);
+                                return RestoCard(
+                                    resto: _filteredRestaurants[index]);
                               },
                             ),
             ),
@@ -247,5 +255,4 @@ void _sortByPrice() {
       },
     );
   }
-
 }

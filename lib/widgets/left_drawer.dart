@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sajiwara/review/screens/list_restaurant.dart';
 import 'package:sajiwara/screens/menu.dart';
 import 'package:sajiwara/search/screens/search_menu.dart';
 import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
@@ -13,7 +14,7 @@ class LeftDrawer extends StatelessWidget {
       SnackBar(
         content: Text(
           message,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
@@ -32,11 +33,11 @@ class LeftDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              const Color(0xFFFEF9E7), // Light cream background
-              const Color(0xFFFFF3E0), // Soft pastel orange
+              Color(0xFFFEF9E7), // Light cream background
+              Color(0xFFFFF3E0), // Soft pastel orange
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -107,7 +108,12 @@ class LeftDrawer extends StatelessWidget {
                     context: context,
                     icon: Icons.rate_review_outlined,
                     text: 'Ulasan Saya',
-                    onTap: () => _showStyledSnackBar(context, 'Menu Ulasan'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RestaurantPage(),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   _buildDivider(),
@@ -192,16 +198,16 @@ class LeftDrawer extends StatelessWidget {
 Widget _buildDrawerHeader(BuildContext context) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       gradient: LinearGradient(
         colors: [
-          const Color(0xFFFF6B6B), // Vibrant food app red
-          const Color(0xFFFFD93D), // Warm yellow
+          Color(0xFFFF6B6B), // Vibrant food app red
+          Color(0xFFFFD93D), // Warm yellow
         ],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      borderRadius: const BorderRadius.only(
+      borderRadius: BorderRadius.only(
         bottomLeft: Radius.circular(20),
         bottomRight: Radius.circular(20),
       ),

@@ -42,7 +42,11 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   void _handleRegister(BuildContext context, CookieRequest request) async {
-    if (!_formKey.currentState!.validate()) return;
+    print("test");
+    if (!_formKey.currentState!.validate()) {
+      print("halo");
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -65,8 +69,12 @@ class _RegisterPageState extends State<RegisterPage>
       return;
     }
 
-    final response = await request.postJson(
+    print("dimana");
+
+    final response = await request.post(
       "http://127.0.0.1:8000/auth/register/",
+
+      // "https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/auth/register/",
       jsonEncode({
         "username": username,
         "password1": password1,
@@ -77,6 +85,8 @@ class _RegisterPageState extends State<RegisterPage>
     setState(() {
       _isLoading = false;
     });
+
+    print("disini");
 
     if (context.mounted) {
       if (response['status'] == 'success') {
@@ -173,8 +183,8 @@ class _RegisterPageState extends State<RegisterPage>
                           controller: _usernameController,
                           decoration: InputDecoration(
                             labelText: 'Username',
-                            prefixIcon:
-                                Icon(Icons.person, color: Colors.deepOrange),
+                            prefixIcon: const Icon(Icons.person,
+                                color: Colors.deepOrange),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
                             ),
@@ -198,8 +208,8 @@ class _RegisterPageState extends State<RegisterPage>
                           obscureText: !_passwordVisible,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            prefixIcon:
-                                Icon(Icons.lock, color: Colors.deepOrange),
+                            prefixIcon: const Icon(Icons.lock,
+                                color: Colors.deepOrange),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _passwordVisible
@@ -239,7 +249,7 @@ class _RegisterPageState extends State<RegisterPage>
                           obscureText: !_confirmPasswordVisible,
                           decoration: InputDecoration(
                             labelText: 'Confirm Password',
-                            prefixIcon: Icon(Icons.lock_outline,
+                            prefixIcon: const Icon(Icons.lock_outline,
                                 color: Colors.deepOrange),
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -281,15 +291,16 @@ class _RegisterPageState extends State<RegisterPage>
                               ? null
                               : () => _handleRegister(context, request),
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(double.infinity, 50),
+                            minimumSize: const Size(double.infinity, 50),
                             backgroundColor: Colors.deepOrange.shade600,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                           ),
                           child: _isLoading
-                              ? CircularProgressIndicator(color: Colors.white)
-                              : Text('Register',
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
+                              : const Text('Register',
                                   style: TextStyle(color: Colors.white)),
                         )
                             .animate()
