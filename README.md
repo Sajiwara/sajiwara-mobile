@@ -2,6 +2,12 @@
 ## Link Deployment
 
 
+## Link Download
+https://install.appcenter.ms/orgs/sajiwara/apps/sajiwara/distribution_groups/public/releases/1
+
+## Link Build
+https://build.appcenter.ms/v0.1/apps/4aae2b63-3787-42c0-839f-1ae56b81f975/branches/main/badge
+
 ## Nama-nama anggota kelompok
 1. 2306210714 – Ilham Satya Nusabhakti
 2. 2306202132 – Fadhlurohman Dzaki
@@ -10,7 +16,7 @@
 5. 2306208810 – Theresia Tarianingsih
 
 ## Deskripsi aplikasi 
-Sajiwara adalah platform mobile yang membawa pengunjung mobile untuk berbagi pengalaman kuliner di berbagai tempat makan, khususnya di Jogjakarta. Lebih dari sekadar situs review restoran kuliner saja, Sajiwara memberikan fasilitas untuk menuju petualangan kuliner Jogjakarta. Dari angkringan legendaris hingga kafe modern, Sajiwara membawa Anda menjelajahi setiap sudut Jogja yang kaya akan cita rasa dan cerita. Dengan ulasan pengguna lain, Anda bisa dengan mudah menemukan tempat makan yang sesuai dengan selera, suasana, dan anggaran.
+Sajiwara adalah platform mobile yang membawa pengunjung mobile untuk berbagi pengalaman kuliner di berbagai tempat makan, khususnya di Jogjakarta. Lebih dari sekadar aplikasi review restoran kuliner saja, Sajiwara memberikan fasilitas untuk menuju petualangan kuliner Jogjakarta. Dari angkringan legendaris hingga kafe modern, Sajiwara membawa Anda menjelajahi setiap sudut Jogja yang kaya akan cita rasa dan cerita. Dengan ulasan pengguna lain, Anda bisa dengan mudah menemukan tempat makan yang sesuai dengan selera, suasana, dan anggaran.
 
 Kebermanfaatan Sajiwara:
 1. Panduan Wisata Kuliner: Sajiwara membantu wisatawan maupun penduduk lokal untuk menemukan tempat makan yang cocok, baik dari segi makanan, lokasi, dan harga.
