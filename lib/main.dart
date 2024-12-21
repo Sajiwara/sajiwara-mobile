@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:sajiwara-mobile/screens/menu.dart';
-=======
 import 'package:sajiwara/screens/login.dart';
 import 'package:sajiwara/screens/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
->>>>>>> 20ae4f2eaaeaadc51633e59ffbfbe9a91fb67eee
 
 void main() {
   runApp(const MyApp());
