@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+import 'package:sajiwara-mobile/widgets/left';
+=======
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +12,7 @@ import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
 import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
 import 'package:sajiwara/review/screens/list_restaurant.dart';
 import 'package:sajiwara/search/screens/search_menu.dart';
+>>>>>>> 20ae4f2eaaeaadc51633e59ffbfbe9a91fb67eee
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -26,6 +30,36 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
     return Scaffold(
+<<<<<<< HEAD
+      // AppBar adalah bagian atas halaman yang menampilkan judul.
+      appBar: AppBar(
+        // Judul aplikasi "Mental Health Tracker" dengan teks putih dan tebal.
+        title: const Text(
+          'Sajiwara',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        // Warna latar belakang AppBar diambil dari skema warna tema aplikasi.
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+      // Body halaman dengan padding di sekelilingnya.
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        // Menyusun widget secara vertikal dalam sebuah kolom.
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Row untuk menampilkan 3 InfoCard secara horizontal.
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InfoCard(title: 'NPM', content: npm),
+                InfoCard(title: 'Name', content: name),
+                InfoCard(title: 'Class', content: className),
+              ],
+=======
       body: CustomScrollView(
         slivers: [
           // Sliver App Bar with Animated Background
@@ -36,6 +70,7 @@ class MyHomePage extends StatelessWidget {
             iconTheme: const IconThemeData(
               color:
                   Colors.white, // Mengubah warna ikon hamburger menjadi putih
+>>>>>>> 20ae4f2eaaeaadc51633e59ffbfbe9a91fb67eee
             ),
             flexibleSpace: FlexibleSpaceBar(
               title: const Text(
