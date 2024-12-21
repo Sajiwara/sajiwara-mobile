@@ -42,7 +42,6 @@ class _SearchRestoPageState extends State<SearchResto> {
 
   Future<List<Restaurant>> fetchProduct(CookieRequest request) async {
     final response = await request.get('http://127.0.0.1:8000/search/json/');
-    // 'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/search/json/');
     var data = response;
 
     List<Restaurant> listProduct = [];
@@ -66,6 +65,7 @@ class _SearchRestoPageState extends State<SearchResto> {
                   resto.fields.nama.toLowerCase().contains(query.toLowerCase()))
               .toList();
           _isSearchInitiated = true;
+          print(_allRestaurants);
         });
       });
     } else {

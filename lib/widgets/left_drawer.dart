@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sajiwara/review/screens/review.dart';
+import 'package:sajiwara/review/screens/list_restaurant.dart';
 import 'package:sajiwara/screens/menu.dart';
 import 'package:sajiwara/search/screens/search_menu.dart';
 import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
@@ -111,7 +111,7 @@ class LeftDrawer extends StatelessWidget {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ReviewPage(),
+                        builder: (context) => const RestaurantPage(),
                       ),
                     ),
                   ),

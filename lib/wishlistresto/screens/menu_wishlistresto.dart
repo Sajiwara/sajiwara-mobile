@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sajiwara/review/screens/review.dart';
+import 'package:sajiwara/review/screens/list_restaurant.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/form_wishlistresto.dart';
 import 'package:sajiwara/wishlistresto/screens/list_wishlist.dart';
@@ -284,7 +284,8 @@ class _WishlistRestoPageState extends State<WishlistResto>
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const ReviewPage(),
+                                      builder: (context) =>
+                                          const RestaurantPage(),
                                     ),
                                   );
                                 },
