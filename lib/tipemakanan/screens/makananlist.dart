@@ -34,8 +34,8 @@ class _MakananListState extends State<MakananList> {
 
   Future<void> fetchMakanan() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://127.0.0.1:8000/tipemakanan/json/'));
+      final response = await http.get(Uri.parse(
+          'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/json/'));
       // 'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/json/')); // URL API
       if (response.statusCode == 200) {
         setState(() {
@@ -204,84 +204,3 @@ class _MakananListState extends State<MakananList> {
     );
   }
 }
-
-
-
-//         child: isLoading
-//             ? const Center(child: CircularProgressIndicator())
-//             : GridView.builder(
-//                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//                   crossAxisCount: 2,
-//                   mainAxisSpacing: 10,
-//                   crossAxisSpacing: 10,
-//                 ),
-//                 itemCount: makananList.length,
-//                 itemBuilder: (context, index) {
-//                   final makanan = makananList[index];
-//                   return Card(
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                     color: Colors.white,
-//                     child: Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             makanan.fields.restoran,
-//                             style: const TextStyle(
-//                               fontWeight: FontWeight.bold,
-//                               color: Colors.black,
-//                             ),
-//                           ),
-//                           const SizedBox(height: 4),
-//                           Text(
-//                             makanan.fields.preferensi
-//                                 .toString()
-//                                 .split('.')
-//                                 .last,
-//                             style: const TextStyle(color: Colors.black87),
-//                           ),
-//                           const SizedBox(height: 4),
-//                           Expanded(
-//                             child: SingleChildScrollView(
-//                               child: Text(
-//                                 makanan.fields.menu,
-//                                 style: const TextStyle(color: Colors.black54),
-//                               ),
-//                             ),
-//                           ),
-//                           const Spacer(),
-//                           ElevatedButton(
-//                             onPressed: () {
-//                               Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) => EditMakanan(
-//                                     id: makanan.pk,
-//                                   ),
-//                                 ),
-//                               );
-//                             },
-//                             style: ElevatedButton.styleFrom(
-//                               backgroundColor: Colors.red,
-//                               shape: RoundedRectangleBorder(
-//                                 borderRadius: BorderRadius.circular(8),
-//                               ),
-//                             ),
-//                             child: const Text(
-//                               'Edit',
-//                               style: const TextStyle(color: Colors.white),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               ),
-//       ),
-//     );
-//   }
-// }

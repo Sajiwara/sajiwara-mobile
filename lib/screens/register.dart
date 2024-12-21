@@ -72,9 +72,9 @@ class _RegisterPageState extends State<RegisterPage>
     print("dimana");
 
     final response = await request.post(
-      "http://127.0.0.1:8000/auth/register/",
+      // "http://127.0.0.1:8000/auth/register/",
 
-      // "https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/auth/register/",
+      "https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/auth/register/",
       jsonEncode({
         "username": username,
         "password1": password1,

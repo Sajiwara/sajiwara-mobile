@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<void> deleteReview(String reviewId) async {
-  final url = Uri.parse('http://127.0.0.1:8000/review/flutter-delete-review/$reviewId/');
+  final url = Uri.parse(
+      'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/review/flutter-delete-review/$reviewId/');
   try {
     final response = await http.post(
       url,

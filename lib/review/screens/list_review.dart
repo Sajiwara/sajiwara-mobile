@@ -20,8 +20,8 @@ class _ReviewListPageState extends State<ReviewListPage> {
 
   Future<int?> getUserId(CookieRequest request) async {
     try {
-      final response =
-          await request.get('http://127.0.0.1:8000/review/get-user-info/');
+      final response = await request.get(
+          'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/review/get-user-info/');
       if (response is Map && response.containsKey("id")) {
         return response["id"];
       } else {
@@ -37,7 +37,7 @@ class _ReviewListPageState extends State<ReviewListPage> {
     final request = context.read<CookieRequest>();
     try {
       final response = await request.post(
-        'http://127.0.0.1:8000/review/delete-flutter/$reviewId/',
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/review/delete-flutter/$reviewId/',
         {'_method': 'DELETE'},
       );
 
@@ -63,8 +63,8 @@ class _ReviewListPageState extends State<ReviewListPage> {
 
   Future<List<Review>> fetchReviews(CookieRequest request) async {
     try {
-      final response = await request
-          .get('http://127.0.0.1:8000/review/${widget.id}/jsonReview/');
+      final response = await request.get(
+          'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/review/${widget.id}/jsonReview/');
 
       if (response is List) {
         return response.map((item) => Review.fromJson(item)).toList();
@@ -198,15 +198,13 @@ class _ReviewListPageState extends State<ReviewListPage> {
                                             builder: (context) =>
                                                 EditReviewScreen(
                                               reviewId: review.id,
-                                              initialReviewText:
-                                                  review.review,
+                                              initialReviewText: review.review,
                                             ),
                                           ),
                                         ).then((updatedReviewText) {
                                           if (updatedReviewText != null) {
                                             setState(() {
-                                              review.review =
-                                                  updatedReviewText;
+                                              review.review = updatedReviewText;
                                             });
                                           }
                                         });
