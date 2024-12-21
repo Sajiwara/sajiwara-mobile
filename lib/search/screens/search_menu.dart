@@ -41,8 +41,8 @@ class _SearchRestoPageState extends State<SearchResto> {
   }
 
   Future<List<Restaurant>> fetchProduct(CookieRequest request) async {
-    final response = await request.get(
-        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/search/json/');
+    final response = await request.get('http://127.0.0.1:8000/search/json/');
+    // 'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/search/json/');
     var data = response;
 
     List<Restaurant> listProduct = [];

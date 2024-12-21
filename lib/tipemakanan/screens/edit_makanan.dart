@@ -23,8 +23,8 @@ class _EditMakananState extends State<EditMakanan> {
   Future<void> fetchMakananDetail() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/json/${widget.id}/'),
+        Uri.parse('http://127.0.0.1:8000/tipemakanan/json/${widget.id}/'),
+        // 'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/json/${widget.id}/'),
       );
 
       if (response.statusCode == 200) {
@@ -55,7 +55,8 @@ class _EditMakananState extends State<EditMakanan> {
     try {
       print("halo");
       final response = await request.post(
-        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/edit-flutter/${widget.id}/',
+        'http://127.0.0.1:8000/tipemakanan/edit-flutter/${widget.id}/',
+        // 'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/edit-flutter/${widget.id}/',
         json.encode({
           'restoran': namaController.text,
           'preferensi': preferensiController.text,

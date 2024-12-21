@@ -8,9 +8,9 @@ import 'package:sajiwara/wishlistresto/screens/list_wishlist.dart';
 
 class WishlistRestoFormPage extends StatefulWidget {
   final String? initialRestaurant;
-  
+
   const WishlistRestoFormPage({
-    super.key, 
+    super.key,
     this.initialRestaurant,
   });
 
@@ -30,8 +30,8 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
 
     try {
       final response = await request.post(
-        // 'http://127.0.0.1:8000/wishlist/add-to-wishlist-flutter/',
-        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/add-to-wishlist-flutter/',
+        'http://127.0.0.1:8000/wishlist/add-to-wishlist-flutter/',
+        // 'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/add-to-wishlist-flutter/',
         convert.jsonEncode({
           'restaurant_wanted': restaurant,
           'wanted_resto': true,

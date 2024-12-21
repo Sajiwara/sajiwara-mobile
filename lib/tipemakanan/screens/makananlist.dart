@@ -34,8 +34,9 @@ class _MakananListState extends State<MakananList> {
 
   Future<void> fetchMakanan() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/json/')); // URL API
+      final response =
+          await http.get(Uri.parse('http://127.0.0.1:8000/tipemakanan/json/'));
+      // 'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/tipemakanan/json/')); // URL API
       if (response.statusCode == 200) {
         setState(() {
           makananList = productEntryFromJson(response.body);
