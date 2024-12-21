@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:sajiwara-mobile/widgets/left';
+=======
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:sajiwara/screens/login.dart';
+import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
+import 'package:sajiwara/widgets/left_drawer.dart';
+import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
+import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
+import 'package:sajiwara/review/screens/list_restaurant.dart';
+import 'package:sajiwara/search/screens/search_menu.dart';
+>>>>>>> 20ae4f2eaaeaadc51633e59ffbfbe9a91fb67eee
 
 class MyHomePage extends StatelessWidget {
-  final String npm = '5000000000'; // NPM
-  final String name = 'Gedagedi Gedagedago'; // Nama
-  final String className = 'PBP S'; // Kelas
   MyHomePage({super.key});
 
   final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Mood", Icons.mood),
-    ItemHomepage("Tambah Mood", Icons.add),
-    ItemHomepage("Logout", Icons.logout),
+    ItemHomepage("Search", Icons.search, Colors.blue),
+    ItemHomepage("Explore Makanan", Icons.restaurant, Colors.green),
+    ItemHomepage("Add Wishlist Resto", Icons.favorite_border, Colors.red),
+    ItemHomepage("Add Wishlist Food", Icons.fastfood, Colors.orange),
+    ItemHomepage("Review", Icons.rate_review, Colors.purple),
+    ItemHomepage("Logout", Icons.logout, Colors.deepPurple),
   ];
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold menyediakan struktur dasar halaman dengan AppBar dan body.
+    final request = context.watch<CookieRequest>();
     return Scaffold(
+<<<<<<< HEAD
       // AppBar adalah bagian atas halaman yang menampilkan judul.
       appBar: AppBar(
         // Judul aplikasi "Mental Health Tracker" dengan teks putih dan tebal.
@@ -45,84 +59,74 @@ class MyHomePage extends StatelessWidget {
                 InfoCard(title: 'Name', content: name),
                 InfoCard(title: 'Class', content: className),
               ],
+=======
+      body: CustomScrollView(
+        slivers: [
+          // Sliver App Bar with Animated Background
+          SliverAppBar(
+            expandedHeight: 300.0,
+            floating: false,
+            pinned: true,
+            iconTheme: const IconThemeData(
+              color:
+                  Colors.white, // Mengubah warna ikon hamburger menjadi putih
+>>>>>>> 20ae4f2eaaeaadc51633e59ffbfbe9a91fb67eee
             ),
-
-            // Memberikan jarak vertikal 16 unit.
-            const SizedBox(height: 16.0),
-
-            // Menempatkan widget berikutnya di tengah halaman.
-            Center(
-              child: Column(
-                // Menyusun teks dan grid item secara vertikal.
-
+            flexibleSpace: FlexibleSpaceBar(
+              title: const Text(
+                'Sajiwara',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.black38,
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
+                ),
+              ),
+              background: Stack(
+                fit: StackFit.expand,
                 children: [
-                  // Menampilkan teks sambutan dengan gaya tebal dan ukuran 18.
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      'Welcome to Mental Health Tracker',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                  Image.asset(
+                    'assets/images/food_background.png',
+                    fit: BoxFit.cover,
+                  ),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
                       ),
                     ),
-                  ),
-
-                  // Grid untuk menampilkan ItemCard dalam bentuk grid 3 kolom.
-                  GridView.count(
-                    primary: true,
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    // Agar grid menyesuaikan tinggi kontennya.
-                    shrinkWrap: true,
-
-                    // Menampilkan ItemCard untuk setiap item dalam list items.
-                    children: items.map((ItemHomepage item) {
-                      return ItemCard(item);
-                    }).toList(),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+          ),
 
-class InfoCard extends StatelessWidget {
-  // Kartu informasi yang menampilkan title dan content.
-
-  final String title; // Judul kartu.
-  final String content; // Isi kartu.
-
-  const InfoCard({super.key, required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      // Membuat kotak kartu dengan bayangan dibawahnya.
-      elevation: 2.0,
-      child: Container(
-        // Mengatur ukuran dan jarak di dalam kartu.
-        width: MediaQuery.of(context).size.width /
-            3.5, // menyesuaikan dengan lebar device yang digunakan.
-        padding: const EdgeInsets.all(16.0),
-        // Menyusun title dan content secara vertikal.
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+          // Grid of Menu Items
+          SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: SliverGrid.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 16.0,
+              crossAxisSpacing: 16.0,
+              children: items.map((ItemHomepage item) {
+                return ItemCard(item, request);
+              }).toList(),
             ),
-            const SizedBox(height: 8.0),
-            Text(content),
-          ],
-        ),
+          ),
+        ],
       ),
+      drawer: const LeftDrawer(),
     );
   }
 }
@@ -130,58 +134,161 @@ class InfoCard extends StatelessWidget {
 class ItemHomepage {
   final String name;
   final IconData icon;
+  final Color color;
 
-  ItemHomepage(this.name, this.icon);
+  ItemHomepage(this.name, this.icon, this.color);
 }
 
 class ItemCard extends StatelessWidget {
-  // Menampilkan kartu dengan ikon dan nama.
-
   final ItemHomepage item;
 
-  const ItemCard(this.item, {super.key});
+  const ItemCard(this.item, CookieRequest request, {super.key});
+
+  void _handleItemTap(BuildContext context, CookieRequest request) async {
+    switch (item.name) {
+      case "Add Wishlist Resto":
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const WishlistResto(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = const Offset(1.0, 0.0);
+              var end = Offset.zero;
+              var curve = Curves.easeInOutQuart;
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+        break;
+      case "Logout":
+        final response = await request.logout(
+            // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+            "http://127.0.0.1:8000/auth/logout/");
+
+        // "https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/auth/logout/");
+        String message = response["message"];
+        if (context.mounted) {
+          if (response['status']) {
+            String uname = response["username"];
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("$message Sampai jumpa, $uname."),
+            ));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          }
+        }
+        break;
+      case "Review":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RestaurantPage(),
+          ),
+        );
+        break;
+      case "Search":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SearchResto(),
+          ),
+        );
+        break;
+      case "Add Wishlist Food":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const WishlistMenu(),
+          ),
+        );
+        break;
+      case "Explore Makanan":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MakananList(),
+          ),
+        );
+        break;
+      default: // TODO: add routing kalian
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(content: Text("You pressed ${item.name}!")),
+          );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      // Menentukan warna latar belakang dari tema aplikasi.
-      color: Theme.of(context).colorScheme.secondary,
-      // Membuat sudut kartu melengkung.
-      borderRadius: BorderRadius.circular(12),
-
+    final request = context.watch<CookieRequest>();
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: InkWell(
-        // Aksi ketika kartu ditekan.
-        onTap: () {
-          // Menampilkan pesan SnackBar saat kartu ditekan.
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
-        },
-        // Container untuk menyimpan Icon dan Text
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => _handleItemTap(context, request),
         child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              // Menyusun ikon dan teks di tengah kartu.
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              colors: [
+                item.color.withOpacity(0.7),
+                item.color,
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Icon(
+                  item.icon,
+                  color: Colors.white.withOpacity(0.7),
+                  size: 40.0,
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      item.icon,
+                      color: Colors.white,
+                      size: 50.0,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      item.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 500.ms);
   }
 }
