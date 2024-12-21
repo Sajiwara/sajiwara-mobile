@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class EditReviewScreen extends StatefulWidget {
   final String reviewId;
@@ -24,47 +25,56 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
     _reviewController = TextEditingController(text: widget.initialReviewText);
   }
 
- Future<void> _editReview() async {
-  if (!_formKey.currentState!.validate()) return;
+  Future<void> _editReview(CookieRequest request) async {
+    if (!_formKey.currentState!.validate()) return;
 
-  setState(() {
-    _isLoading = true;
-  });
+    setState(() {
+      _isLoading = true;
+    });
 
-  final url = Uri.parse('http://127.0.0.1:8000/review/edit-flutter/${widget.reviewId}/');
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: json.encode({
-      'review_text': _reviewController.text,
-    }),
-  );
+    final url =
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/review/edit-flutter/${widget.reviewId}/';
+    final response = await request.post(
+      url,
+      json.encode({
+        'review_text': _reviewController.text,
+      }),
+    );
 
-  if (response.statusCode == 200) {
-    final responseData = json.decode(response.body);
-    if (responseData['status'] == 'success') {
+    if (response['status'] == 'success') {
       // Mengirimkan data review yang sudah diperbarui
-      Navigator.pop(context, _reviewController.text); // Mengirimkan teks review yang baru
+      Navigator.pop(
+          context, _reviewController.text); // Mengirimkan teks review yang baru
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update review.')),
       );
     }
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Server error. Please try again later.')),
-    );
-  }
+    // if (response.statusCode == 200) {
+    //   final responseData = json.decode(response.body);
+    //   if (responseData['status'] == 'success') {
+    //     // Mengirimkan data review yang sudah diperbarui
+    //     Navigator.pop(context,
+    //         _reviewController.text); // Mengirimkan teks review yang baru
+    //   } else {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(content: Text('Failed to update review.')),
+    //     );
+    //   }
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('Server error. Please try again later.')),
+    //   );
+    // }
 
-  setState(() {
-    _isLoading = false;
-  });
-}
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(title: Text('Edit Review')),
       body: Padding(
@@ -91,7 +101,7 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
               _isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                      onPressed: _editReview,
+                      onPressed: () => _editReview(request),
                       child: Text('Save Changes'),
                     ),
             ],

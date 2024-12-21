@@ -13,6 +13,7 @@ class WishlistMenuFormPage extends StatefulWidget {
 
 class _WishlistMenuFormPageState extends State<WishlistMenuFormPage> {
   final _formKey = GlobalKey<FormState>();
+
   String? _selectedMenu;
   String? _selectedRestaurant;
   List<String> _menus = [];
@@ -29,20 +30,22 @@ class _WishlistMenuFormPageState extends State<WishlistMenuFormPage> {
     setState(() => _isLoading = true);
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/wishlistmenu/menus/'),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        Uri.parse(
+            'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlistmenu/menus/'),
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          _menus = List<String>.from(data);
-        });
-      } else {
-        throw Exception('Failed to load menus');
-      }
+      final List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        _menus = List<String>.from(data);
+      });
+      // if (response.statusCode == 200) {
+      //   final List<dynamic> data = jsonDecode(response.body);
+      //   setState(() {
+      //     _menus = List<String>.from(data);
+      //   });
+      // } else {
+      //   throw Exception('Failed to load menus');
+      // }
     } catch (e) {
       showSnackBar("Error fetching menus: $e");
     } finally {
@@ -54,10 +57,8 @@ class _WishlistMenuFormPageState extends State<WishlistMenuFormPage> {
     setState(() => _isLoading = true);
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/wishlistmenu/restaurants/?menu=$menu'),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        Uri.parse(
+            'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlistmenu/restaurants/?menu=$menu'),
       );
 
       if (response.statusCode == 200) {
@@ -82,9 +83,9 @@ class _WishlistMenuFormPageState extends State<WishlistMenuFormPage> {
     setState(() => _isLoading = true);
     try {
       final request = context.read<CookieRequest>();
-      
+
       final response = await request.post(
-        'http://127.0.0.1:8000/wishlistmenu/add-to-wishlistmenu/',
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlistmenu/add-to-wishlistmenu/',
         {
           'menu': _selectedMenu,
           'restaurant': _selectedRestaurant,
@@ -118,6 +119,8 @@ class _WishlistMenuFormPageState extends State<WishlistMenuFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(

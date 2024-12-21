@@ -24,8 +24,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   Future<List<Restor>> fetchResto(CookieRequest request) async {
     try {
-      final response =
-          await request.get('http://127.0.0.1:8000/review/jsonResto/');
+      final response = await request.get(
+          'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/review/jsonResto/');
 
       if (response is String && response.contains('<html>')) {
         throw FormatException('Invalid response format: HTML received');
@@ -218,8 +218,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => ReviewListPage(
-                                            id:
-                                            resto.pk,
+                                            id: resto.pk,
                                           ),
                                         ),
                                       );

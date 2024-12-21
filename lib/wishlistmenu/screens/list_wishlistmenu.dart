@@ -26,7 +26,7 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
     try {
       final request = context.read<CookieRequest>();
       final response = await request.get(
-        'http://127.0.0.1:8000/wishlistmenu/json/',
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlistmenu/json/',
       );
 
       if (response != null) {
@@ -50,11 +50,10 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
     }
   }
 
-  Future<void> _markAsTried(String id) async {
+  Future<void> _markAsTried(CookieRequest request, String id) async {
     try {
-      final request = context.read<CookieRequest>();
       final response = await request.post(
-        'http://127.0.0.1:8000/wishlistmenu/visited-flutter/$id/',
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlistmenu/visited-flutter/$id/',
         {},
       );
 
@@ -79,15 +78,19 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
     }
   }
 
-  Future<void> _deleteItem(String id) async {
+  Future<void> _deleteItem(CookieRequest request, String id) async {
     try {
-      final request = context.read<CookieRequest>();
+      print("halo");
+      print(id);
       final response = await request.post(
-        'http://127.0.0.1:8000/wishlistmenu/deletewishlist-flutter/$id/',
+        'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlistmenu/deletewishlist-flutter/$id/',
         {},
       );
-
-      if (response['status'] == true) {
+      print(response['status']);
+      print("test");
+      print(response);
+      print("pemisah");
+      if (response['status']) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Successfully deleted from wishlist!'),
@@ -98,6 +101,7 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
       }
     } catch (e) {
       if (mounted) {
+        print(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error deleting item: $e'),
@@ -110,6 +114,7 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -217,7 +222,8 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
                                               : Colors.grey,
                                           size: 28,
                                         ),
-                                        onPressed: () => _markAsTried(item.pk),
+                                        onPressed: () =>
+                                            _markAsTried(request, item.pk),
                                         tooltip: item.fields.tried
                                             ? 'Tried'
                                             : 'Not tried',
@@ -228,7 +234,8 @@ class _WishlistMenuListState extends State<WishlistMenuList> {
                                           color: Colors.red,
                                           size: 28,
                                         ),
-                                        onPressed: () => _deleteItem(item.pk),
+                                        onPressed: () =>
+                                            _deleteItem(request, item.pk),
                                         tooltip: 'Delete from wishlist',
                                       ),
                                     ],
