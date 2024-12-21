@@ -56,7 +56,7 @@ class _WishlistMenuPageState extends State<WishlistMenu> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Temukan makanan favoritmu dan tambahkan ke wishlist untuk pengalaman kuliner yang luar biasa!',
+                            'Temukan menu favoritmu dan tambahkan ke wishlist untuk pengalaman kuliner yang luar biasa!',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -97,8 +97,7 @@ class _WishlistMenuPageState extends State<WishlistMenu> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const WishlistMenu(), ///////////////////////////////
+                          builder: (context) => WishlistMenuFormPage(),
                         ),
                       );
                       // Add button action
@@ -134,8 +133,7 @@ class _WishlistMenuPageState extends State<WishlistMenu> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const WishlistMenu(), ////////////////
+                          builder: (context) => WishlistMenuList(),
                         ),
                       );
                       // View button action

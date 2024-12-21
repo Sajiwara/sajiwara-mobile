@@ -7,7 +7,12 @@ import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/list_wishlist.dart';
 
 class WishlistRestoFormPage extends StatefulWidget {
-  const WishlistRestoFormPage({super.key});
+  final String? initialRestaurant;
+  
+  const WishlistRestoFormPage({
+    super.key, 
+    this.initialRestaurant,
+  });
 
   @override
   State<StatefulWidget> createState() => _WishlistRestoFormPageState();
@@ -42,6 +47,7 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
   void initState() {
     super.initState();
     _fetchRestaurantData();
+    _selectedRestaurant = widget.initialRestaurant;
   }
 
   Future<void> _fetchRestaurantData() async {
