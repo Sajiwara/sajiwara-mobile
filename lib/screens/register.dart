@@ -1,122 +1,106 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sajiwara/screens/login.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:sajiwara/screens/login.dart';
-import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
-import 'package:sajiwara/widgets/left_drawer.dart';
-import 'package:sajiwara/wishlistresto/screens/menu_wishlistresto.dart';
-import 'package:sajiwara/wishlistmenu/screens/menu_wishlistmenu.dart';
-import 'package:sajiwara/review/screens/list_restaurant.dart';
-import 'package:sajiwara/search/screens/search_menu.dart';
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
-
-  final List<ItemHomepage> items = [
-    ItemHomepage("Search", Icons.search, Colors.blue),
-    ItemHomepage("Explore Makanan", Icons.restaurant, Colors.green),
-    ItemHomepage("Add Wishlist Resto", Icons.favorite_border, Colors.red),
-    ItemHomepage("Add Wishlist Food", Icons.fastfood, Colors.orange),
-    ItemHomepage("Review", Icons.rate_review, Colors.purple),
-    ItemHomepage("Logout", Icons.logout, Colors.deepPurple),
-  ];
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // Sliver App Bar with Animated Background
-          SliverAppBar(
-            expandedHeight: 300.0,
-            floating: false,
-            pinned: true,
-            iconTheme: const IconThemeData(
-              color:
-                  Colors.white, // Mengubah warna ikon hamburger menjadi putih
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'Sajiwara',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: Colors.black38,
-                      offset: Offset(2.0, 2.0),
-                    ),
-                  ],
-                ),
-              ),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(
-                    'assets/images/food_background.png',
-                    fit: BoxFit.cover,
-                  ),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.7),
-                          Colors.transparent,
-                        ],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+  State<RegisterPage> createState() => _RegisterPageState();
+}
 
-          // Grid of Menu Items
-          SliverPadding(
-            padding: const EdgeInsets.all(16.0),
-            sliver: SliverGrid.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16.0,
-              crossAxisSpacing: 16.0,
-              children: items.map((ItemHomepage item) {
-                return ItemCard(item, request);
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-      drawer: const LeftDrawer(),
+class _RegisterPageState extends State<RegisterPage>
+    with SingleTickerProviderStateMixin {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  late AnimationController _animationController;
+  bool _isLoading = false;
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
     );
   }
-}
 
-class ItemHomepage {
-  final String name;
-  final IconData icon;
-  final Color color;
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
-  ItemHomepage(this.name, this.icon, this.color);
-}
+  void _handleRegister(BuildContext context, CookieRequest request) async {
+    print("test");
+    if (!_formKey.currentState!.validate()) {
+      print("halo");
+      return;
+    }
 
-class ItemCard extends StatelessWidget {
-  final ItemHomepage item;
+    setState(() {
+      _isLoading = true;
+    });
 
-  const ItemCard(this.item, CookieRequest request, {super.key});
+    String username = _usernameController.text;
+    String password1 = _passwordController.text;
+    String password2 = _confirmPasswordController.text;
 
-  void _handleItemTap(BuildContext context, CookieRequest request) async {
-    switch (item.name) {
-      case "Add Wishlist Resto":
-        Navigator.push(
+    if (password1 != password2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    print("dimana");
+
+    final response = await request.post(
+      "http://127.0.0.1:8000/auth/register/",
+
+      // "https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/auth/register/",
+      jsonEncode({
+        "username": username,
+        "password1": password1,
+        "password2": password2,
+      }),
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    print("disini");
+
+    if (context.mounted) {
+      if (response['status'] == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Successfully registered!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const WishlistResto(),
+                const LoginPage(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               var begin = const Offset(1.0, 0.0);
@@ -124,7 +108,6 @@ class ItemCard extends StatelessWidget {
               var curve = Curves.easeInOutQuart;
               var tween =
                   Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
               return SlideTransition(
                 position: animation.drive(tween),
                 child: child,
@@ -132,128 +115,227 @@ class ItemCard extends StatelessWidget {
             },
           ),
         );
-        break;
-      case "Logout":
-        final response = await request.logout(
-            // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-            "http://127.0.0.1:8000/auth/logout/");
-
-        // "https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/auth/logout/");
-        String message = response["message"];
-        if (context.mounted) {
-          if (response['status']) {
-            String uname = response["username"];
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("$message Sampai jumpa, $uname."),
-            ));
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
-          }
-        }
-        break;
-      case "Review":
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RestaurantPage(),
+      } else {
+        _animationController.forward(from: 0.0);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message'] ?? 'Failed to register!'),
+            backgroundColor: Colors.red,
           ),
         );
-        break;
-      case "Search":
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SearchResto(),
-          ),
-        );
-        break;
-      case "Add Wishlist Food":
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const WishlistMenu(),
-          ),
-        );
-        break;
-      case "Explore Makanan":
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MakananList(),
-          ),
-        );
-        break;
-      default: // TODO: add routing kalian
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(content: Text("You pressed ${item.name}!")),
-          );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    return Card(
-      elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => _handleItemTap(context, request),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: LinearGradient(
-              colors: [
-                item.color.withOpacity(0.7),
-                item.color,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Gradient Background
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.deepOrange.shade300,
+                  Colors.deepOrange.shade600,
+                ],
+              ),
             ),
           ),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 16,
-                right: 16,
-                child: Icon(
-                  item.icon,
-                  color: Colors.white.withOpacity(0.7),
-                  size: 40.0,
-                ),
-              ),
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      item.icon,
-                      color: Colors.white,
-                      size: 50.0,
+
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Card(
+                  elevation: 12,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        // App Title
+                        Text(
+                          'Create Account',
+                          style: TextStyle(
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepOrange.shade700,
+                          ),
+                        )
+                            .animate()
+                            .fadeIn(duration: 500.ms)
+                            .slideY(begin: -0.5, end: 0),
+
+                        const SizedBox(height: 30.0),
+
+                        // Username Field
+                        TextFormField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            labelText: 'Username',
+                            prefixIcon: const Icon(Icons.person,
+                                color: Colors.deepOrange),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your username';
+                            }
+                            return null;
+                          },
+                        )
+                            .animate()
+                            .fadeIn(delay: 200.ms)
+                            .slideX(begin: -0.1, end: 0),
+
+                        const SizedBox(height: 16.0),
+
+                        // Password Field
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: !_passwordVisible,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: const Icon(Icons.lock,
+                                color: Colors.deepOrange),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.deepOrange,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            if (value.length < 8) {
+                              return 'Password must be at least 8 characters';
+                            }
+                            return null;
+                          },
+                        )
+                            .animate()
+                            .fadeIn(delay: 400.ms)
+                            .slideX(begin: -0.1, end: 0),
+
+                        const SizedBox(height: 16.0),
+
+                        // Confirm Password Field
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          obscureText: !_confirmPasswordVisible,
+                          decoration: InputDecoration(
+                            labelText: 'Confirm Password',
+                            prefixIcon: const Icon(Icons.lock_outline,
+                                color: Colors.deepOrange),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _confirmPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.deepOrange,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _confirmPasswordVisible =
+                                      !_confirmPasswordVisible;
+                                });
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please confirm your password';
+                            }
+                            if (value != _passwordController.text) {
+                              return 'Passwords do not match';
+                            }
+                            return null;
+                          },
+                        )
+                            .animate()
+                            .fadeIn(delay: 600.ms)
+                            .slideX(begin: -0.1, end: 0),
+
+                        const SizedBox(height: 24.0),
+
+                        // Register Button
+                        ElevatedButton(
+                          onPressed: _isLoading
+                              ? null
+                              : () => _handleRegister(context, request),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 50),
+                            backgroundColor: Colors.deepOrange.shade600,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
+                              : const Text('Register',
+                                  style: TextStyle(color: Colors.white)),
+                        )
+                            .animate()
+                            .fadeIn(delay: 800.ms)
+                            .slideY(begin: 0.5, end: 0),
+
+                        const SizedBox(height: 16.0),
+
+                        // Login Link
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginPage()),
+                            );
+                          },
+                          child: Text(
+                            'Already have an account? Login',
+                            style: TextStyle(
+                              color: Colors.deepOrange.shade700,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ).animate().fadeIn(delay: 1000.ms),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      item.name,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ).animate().scale(duration: 500.ms).fadeIn(),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
-    ).animate().fadeIn(duration: 500.ms);
+    );
   }
 }
