@@ -24,49 +24,44 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
     _reviewController = TextEditingController(text: widget.initialReviewText);
   }
 
-  Future<void> _editReview() async {
-    if (!_formKey.currentState!.validate()) return;
+ Future<void> _editReview() async {
+  if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+  setState(() {
+    _isLoading = true;
+  });
 
-    print(widget.reviewId);
+  final url = Uri.parse('http://127.0.0.1:8000/review/edit-flutter/${widget.reviewId}/');
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode({
+      'review_text': _reviewController.text,
+    }),
+  );
 
-    final url = Uri.parse('http://127.0.0.1:8000/review/edit-flutter/${widget.reviewId}/');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'review_text': _reviewController.text,
-      }),
-    );
-
-    print("bisakah");
-    if (response.statusCode == 200) {
-      print("disini");
-      final responseData = json.decode(response.body);
-      print(responseData);
-      if (responseData['status'] == 'success') {
-        Navigator.pop(
-            context, responseData['html']); // Return updated reviews HTML
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update review.')),
-        );
-      }
+  if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+    if (responseData['status'] == 'success') {
+      // Mengirimkan data review yang sudah diperbarui
+      Navigator.pop(context, _reviewController.text); // Mengirimkan teks review yang baru
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Server error. Please try again later.')),
+        SnackBar(content: Text('Failed to update review.')),
       );
     }
-
-    setState(() {
-      _isLoading = false;
-    });
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Server error. Please try again later.')),
+    );
   }
+
+  setState(() {
+    _isLoading = false;
+  });
+}
 
   @override
   Widget build(BuildContext context) {

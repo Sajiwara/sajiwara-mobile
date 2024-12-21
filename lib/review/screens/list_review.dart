@@ -161,14 +161,21 @@ class _ReviewListPageState extends State<ReviewListPage> {
                                 onPressed: () {
                                   // Navigate to edit review form
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditReviewScreen(
-                                          reviewId: review.pk,
-                                          initialReviewText:
-                                              review.fields.review,
-                                        ),
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditReviewScreen(
+                                        reviewId: review.pk,
+                                        initialReviewText: review.fields.review,
+                                      ),
+                                    ),
+                                  ).then((updatedReviewText) {
+                                    if (updatedReviewText != null) {
+                                      setState(() {
+                                        // Cari review yang sesuai dan update teksnya
+                                        review.fields.review = updatedReviewText;
+                                      });
+                                    }
+                                  });
                                 },
                               ),
                               IconButton(
