@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sajiwara/review/screens/review.dart';
 import 'package:sajiwara/screens/menu.dart';
 import 'package:sajiwara/search/screens/search_menu.dart';
 import 'package:sajiwara/tipemakanan/screens/makananlist.dart';
@@ -107,7 +108,12 @@ class LeftDrawer extends StatelessWidget {
                     context: context,
                     icon: Icons.rate_review_outlined,
                     text: 'Ulasan Saya',
-                    onTap: () => _showStyledSnackBar(context, 'Menu Ulasan'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReviewPage(),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   _buildDivider(),
