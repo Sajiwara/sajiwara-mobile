@@ -1,9 +1,9 @@
 # Sajiwara
-## Link Deployment
+## Video Promosi
 
 
 ## Link Download
-https://install.appcenter.ms/orgs/sajiwara/apps/sajiwara/distribution_groups/public/releases/1
+https://install.appcenter.ms/orgs/sajiwara/apps/sajiwara/distribution_groups/public/releases/
 
 ## Link Build
 https://build.appcenter.ms/v0.1/apps/4aae2b63-3787-42c0-839f-1ae56b81f975/branches/main/badge
