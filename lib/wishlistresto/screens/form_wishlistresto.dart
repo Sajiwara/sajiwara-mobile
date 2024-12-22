@@ -1,10 +1,12 @@
 import 'dart:convert' as convert;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sajiwara/widgets/left_drawer.dart';
 import 'package:sajiwara/wishlistresto/screens/list_wishlist.dart';
+import 'package:http/http.dart' as http;
 
 class WishlistRestoFormPage extends StatefulWidget {
   final String? initialRestaurant;
@@ -51,24 +53,30 @@ class _WishlistRestoFormPageState extends State<WishlistRestoFormPage> {
   }
 
   Future<void> _fetchRestaurantData() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
     try {
-      final String response = await rootBundle
-          .loadString('restaurants.json'); // Gunakan path yang sesuai
-      final List<dynamic> data = convert.json.decode(response);
+      final response = await http.get(
+        Uri.parse(
+            'https://theresia-tarianingsih-sajiwaraweb.pbp.cs.ui.ac.id/wishlist/restoJson/'),
+      );
 
-      setState(() {
-        _restaurants =
-            data.map((entry) => entry['Nama Restoran'] as String).toList();
-        _isLoading = false;
-      });
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+        final List<dynamic> data =
+            jsonData['data']; // Ambil array di dalam 'data'
+
+        setState(() {
+          _restaurants = data
+              .map<String>((restaurant) => restaurant['restaurant'] as String)
+              .toList();
+        });
+      } else {
+        throw Exception('Failed to load restaurants');
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      print('Error loading restaurant data: $e');
+      print(e);
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
